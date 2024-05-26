@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>main1</title>
+    <script src="cesium/Cesium.js"></script>
+    <!-- <script src="echarts/dist/echarts.js"></script> -->
+    <script src="js/init.js" defer></script>
+    <script src="js/main_frame.js" defer></script>
+    <script src="js/timeline.js" defer></script>
+    <script src="js/view.js" defer></script>
+    <script src="js/data.js" defer></script>
+    <link rel="stylesheet" href="cesium/Widgets/widgets.css">
+    <link rel="stylesheet" href="./css/main_frame.css">
+</head>
+
+<body>
+    <div id="menuArea">
+        <div class="iconContainer">
+            <div class="mainButtons iconButtons" id="pickData">
+                <div class="infoRectangle">
+                    <h2>选择数据</h2>
+                    <div class="intervals"></div>
+                    <div id="dataHelp" class="iconButtons"></div>
+                    <div class="dataType">总碳排放</div>
+                    <div class="dataType">人均碳排放</div>
+                    <div class="dataType">清洁能源</div>
+                </div>
+            </div>
+        </div>
+        <div class="iconContainer">
+            <div class="mainButtons iconButtons" id="pickStyle">
+                <div class="infoRectangle">
+                    <h2>选择样式</h2>
+                    <div class="intervals"></div>
+                    <div id="classifyMethodArea">
+                        <div class="selectStyleHeading">分类方法</div>
+                        <select id="classifyMethod">
+                            <option>自然断点法</option>
+                            <option>等间距法</option>
+                            <option>分位数法</option>
+                            <option>平方</option>
+                        </select>
+                        <select id="classifyNumber">
+                            <option>3类</option>
+                            <option>4类</option>
+                            <option>5类</option>
+                            <option>平滑</option>
+                        </select>
+                        <div id="applyButton1">应用</div>
+                    </div>
+                    <div class="intervals"></div>
+                    <div id="setRibbonArea">
+                        <div class="selectStyleHeading">色带设置</div>
+                        <canvas id="ribbon"></canvas>
+                        <input type="color" id="startColor" value="#ffff00">
+                        <input type="color" id="endColor" value="#ff0000">
+                        <div id="applyButton2">应用</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="iconContainer">
+            <div class="mainButtons iconButtons" id="starred">
+                <div class="infoRectangle">
+                    <h2>已收藏</h2>
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="container">
+        <div id="fakeMenuArea"></div>
+        <div id="showArea">
+            <div id="mapArea">
+                <div id="cesiumContainer"></div>
+                <div id="toolsArea">
+                    <div id="search" class="iconButtons"></div>
+                    <div id="star" class="iconButtons"></div>
+                    <div id="modePicker_3d" class="iconButtons"></div>
+                    <div id="modePicker_2_5d" class="iconButtons"></div>
+                    <div id="modePicker_2d" class="iconButtons"></div>
+                </div>
+                <div id="timelineArea">
+                    <h3 id="timelineYear">1970</h3>
+                    <div id="timeline"></div>
+                    <div id="timeline2"></div>
+                    <div id="timelineSlider"></div>
+                </div>
+                <div id="stateArea"></div>
+            </div>
+            <div id="columnDragger"></div>
+            <div id="chartArea">
+                <div id="compareIcon" class="iconButtons"></div>
+                <div id="compare" class="iconButtons">对比</div>
+                <div id="pitGraphArea">
+                    <span class="graphHeading">碳排放类型占比</span>
+                    <div class="graphArea"></div>
+                </div>
+                <div id="lineGraphArea">
+                    <span class="graphHeading">碳排放时序变化</span>
+                    <div class="graphArea"></div>
+                </div>
+                <div id="lineGraphArea2">
+                    <span class="graphHeading">清洁能源时序变化：(可选)</span>
+                    <div class="graphArea"></div>
+                </div>
+                <div id='predict' style="margin-bottom: 100px;" id="lineGraphArea">
+                    <span class="graphHeading">碳达峰年份预测：</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
