@@ -19,10 +19,10 @@ body {
 /*  */
 
 #pickData {
-  background-image: url("/src/icon/数据.png");
+  background-image: url("../src/icon/数据.png");
 }
 #pickData:hover {
-  background-image: url("/src/icon_hover/数据.png");
+  background-image: url("../src/icon_hover/数据.png");
 }
 #dataHelp {
   position: absolute;
@@ -31,26 +31,26 @@ body {
   height: 25px;
   top: 25px;
   left: 120px;
-  background-image: url("/src/icon/帮助.png");
+  background-image: url("../src/icon/帮助.png");
 }
 #dataHelp:hover {
-  background-image: url("/src/icon_hover/帮助.png");
+  background-image: url("../src/icon_hover/帮助.png");
 }
 
 #pickStyle {
-  background-image: url("/src/icon/样式选择.png");
+  background-image: url("../src/icon/样式选择.png");
 }
 #pickStyle:hover {
   width: 40px;
   height: 40px;
-  background-image: url("/src/icon_hover/样式选择.png");
+  background-image: url("../src/icon_hover/样式选择.png");
 }
 
 #starred{
-  background-image: url('/src/icon/收藏.png');
+  background-image: url('../src/icon/收藏.png');
 }
 #starred:hover{
-  background-image: url('/src/icon_hover/收藏.png');
+  background-image: url('../src/icon_hover/收藏.png');
 }
 
 /*  */
@@ -294,36 +294,36 @@ body {
 }
 
 #search {
-  background-image: url("/src/icon/搜索.png");
+  background-image: url("../src/icon/搜索.png");
 }
 #search:hover {
-  background-image: url("/src/icon_hover/搜索.png");
+  background-image: url("../src/icon_hover/搜索.png");
 }
 #star {
-  background-image: url("/src/icon/收藏.png");
+  background-image: url("../src/icon/收藏.png");
 }
 #star:hover {
-  background-image: url("/src/icon_hover/收藏.png");
+  background-image: url("../src/icon_hover/收藏.png");
 }
 #modePicker_3d {
-  background-image: url("/src/icon/3d.png");
+  background-image: url("../src/icon/3d.png");
 }
 #modePicker_3d:hover {
-  background-image: url("/src/icon_hover/3d.png");
+  background-image: url("../src/icon_hover/3d.png");
 }
 #modePicker_2_5d {
   display: none;
-  background-image: url("/src/icon/2.5d.png");
+  background-image: url("../src/icon/2.5d.png");
 }
 #modePicker_2_5d:hover {
-  background-image: url("/src/icon_hover/2.5d.png");
+  background-image: url("../src/icon_hover/2.5d.png");
 }
 #modePicker_2d {
   display: none;
-  background-image: url("/src/icon/2d.png");
+  background-image: url("../src/icon/2d.png");
 }
 #modePicker_2d:hover {
-  background-image: url("/src/icon_hover/2d.png");
+  background-image: url("../src/icon_hover/2d.png");
 }
 
 /*  */
@@ -344,7 +344,7 @@ body {
   left: 5%;
   width: 35px;
   height: 35px;
-  background-image: url("/src/icon/对比.png");
+  background-image: url("../src/icon/对比.png");
 }
 #compare {
   width: 100px;
