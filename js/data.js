@@ -7,22 +7,25 @@ const endColorInput = document.getElementById("endColor");
 const legendRibbon = document.getElementById("legendRibbon");
 const cty = legendRibbon.getContext("2d");
 
-// 创建一个长度为51的数组,并将所有值赋值为最小值
+// 创建两个长度为51的数组，分别存储当前数据各个年份的最小值和最大值
 var minValueArray = new Array(51).fill(Number.MAX_VALUE);
 var maxValueArray = new Array(51).fill(Number.MIN_VALUE);
 
-const minSizeArray = new Array(51).fill(Number.MAX_VALUE);
-const maxSizeArray = new Array(51).fill(Number.MIN_VALUE);
-
+// 存储样式
+// 分类方法，默认为拉伸
 var styleMethod = "stretching";
+// 拉伸参数，即色带分布方式
 var stretchingN = 2;
+// 其他分类（等间距、分为数、自然间断）参数，即分类数量
 var classifyN = 3;
+
 
 // 初始化起始和终止颜色
 let startColor = hexToRgb(startColorInput.value);
 let endColor = hexToRgb(endColorInput.value);
 generateRibbon();
 
+// 每次颜色改动、重绘样式
 startColorInput.addEventListener("change", function () {
   generateRibbon();
   changeStyle();
@@ -32,7 +35,7 @@ endColorInput.addEventListener("change", function () {
   changeStyle();
 });
 
-// 生成色带的函数
+// 生成色带
 function generateRibbon() {
   startColor = hexToRgb(startColorInput.value);
   endColor = hexToRgb(endColorInput.value);
@@ -89,28 +92,27 @@ function hexToRgb(hex) {
     : null;
 }
 
-const minSize = 10;
-const maxSize = 10;
-let currDataSource = null;
 
+// 加载total
+let currDataSource = null;
 Cesium.GeoJsonDataSource.load("../src/data_point/total_point.geojson", {})
   .then(function (dataSource) {
     currDataSource = dataSource;
-    addData();
+    addData(); // 待注释
   })
   .catch((e) => {
     console.log(error);
   });
 
+// 加载total
 function addData() {
   if (!currDataSource) console.log("nodata");
   viewer.dataSources.add(currDataSource);
   let entities = currDataSource.entities.values;
-  console.log(entities[0]);
+  // 在加载时遍历得到当前数据所有国家，储存各个年份的最小值和最大值
   for (let i = 0; i < entities.length; i++) {
     for (let j = 1970; j <= 2020; j++) {
       const value = entities[i].properties[`_F${j}`]._value;
-      // console.log(j, "年:", value);
       if (value < minValueArray[j - 1970]) {
         minValueArray[j - 1970] = value;
       } else if (value > maxValueArray[j - 1970]) {
@@ -128,52 +130,11 @@ function addData() {
   // changeStyle();
 }
 
+
 const classifyMethod = document.getElementById("classifyMethod");
 const stretchingNumber = document.getElementById("stretchingNumber");
 const classifyNumber = document.getElementById("classifyNumber");
-
-stretchingNumber.addEventListener("change", function () {
-  const value = stretchingNumber.value;
-  switch (value) {
-    case "线性":
-      stretchingN = 1;
-      break;
-    case "平方根":
-      stretchingN = 2;
-      break;
-    case "立方根":
-      stretchingN = 3;
-      break;
-    case "六次根":
-      stretchingN = 6;
-      break;
-    default:
-      console.log("Unknown command!");
-      break;
-  }
-  changeStyleStretching();
-  generateRibbon();
-});
-
-classifyNumber.addEventListener("change", function () {
-  const value = classifyNumber.value;
-  switch (value) {
-    case "3类":
-      classifyN = 3;
-      break;
-    case "4类":
-      classifyN = 4;
-      break;
-    case "5类":
-      classifyN = 5;
-      break;
-    default:
-      console.log("Unknown command!");
-      break;
-  }
-  changeStyle();
-});
-
+// 更改符号化类型（拉伸和其他三种分层设色）
 classifyMethod.addEventListener("change", function () {
   const value = classifyMethod.value;
   switch (value) {
@@ -204,7 +165,71 @@ classifyMethod.addEventListener("change", function () {
   console.log(styleMethod);
   changeStyle();
 });
+// 更改拉伸参数
+stretchingNumber.addEventListener("change", function () {
+  const value = stretchingNumber.value;
+  switch (value) {
+    case "线性":
+      stretchingN = 1;
+      break;
+    case "平方根":
+      stretchingN = 2;
+      break;
+    case "立方根":
+      stretchingN = 3;
+      break;
+    case "六次根":
+      stretchingN = 6;
+      break;
+    default:
+      console.log("Unknown command!");
+      break;
+  }
+  changeStyleStretching();
+  generateRibbon();
+});
+// 更改分类参数
+classifyNumber.addEventListener("change", function () {
+  const value = classifyNumber.value;
+  switch (value) {
+    case "3类":
+      classifyN = 3;
+      break;
+    case "4类":
+      classifyN = 4;
+      break;
+    case "5类":
+      classifyN = 5;
+      break;
+    default:
+      console.log("Unknown command!");
+      break;
+  }
+  changeStyle();
+});
 
+// 改变样式
+function changeStyle() {
+  switch (styleMethod) {
+    case "stretching":
+      changeStyleStretching();
+      break;
+    case "nature":
+      changeStyleNature();
+      break;
+    case "equalSpace":
+      changeStyleEqualSpace();
+      break;
+    case "quartiles":
+      changeStyleQuartiles();
+      break;
+    default:
+      console.log("Unknown command!");
+      break;
+  }
+}
+
+// 生成拉伸的图例
 function changeLegendStretching() {
   const legendArea1 = document.getElementById("legendArea1");
   const legendArea2 = document.getElementById("legendArea2");
@@ -216,7 +241,7 @@ function changeLegendStretching() {
   const max = maxValueArray[year - 1970] / 100000000;
   labelMax.textContent = Math.round(max * 1000) / 1000 + "亿";
 }
-
+// 生成其他分类方法的图例
 function changeLegendClassify(intervals, colors) {
   const legendArea1 = document.getElementById("legendArea1");
   const legendArea2 = document.getElementById("legendArea2");
@@ -244,26 +269,7 @@ function changeLegendClassify(intervals, colors) {
   }
 }
 
-function changeStyle() {
-  switch (styleMethod) {
-    case "stretching":
-      changeStyleStretching();
-      break;
-    case "nature":
-      changeStyleNature();
-      break;
-    case "equalSpace":
-      changeStyleEqualSpace();
-      break;
-    case "quartiles":
-      changeStyleQuartiles();
-      break;
-    default:
-      console.log("Unknown command!");
-      break;
-  }
-}
-
+// 改变拉伸
 function changeStyleStretching() {
   startColor = hexToRgb(startColorInput.value);
   endColor = hexToRgb(endColorInput.value);
@@ -286,6 +292,8 @@ function changeStyleStretching() {
   changeLegendStretching();
 }
 
+// 读取intervals（分类区间），生成colors，并设置各点颜色
+// intervals的大小为classifyN+1，colors大小为classifyN
 function setClassifyColor(intervals, colors) {
   for (let i = 0; i < classifyN; i++) {
     const ratio = i / (classifyN - 1);
@@ -309,10 +317,12 @@ function setClassifyColor(intervals, colors) {
     entities[i].point.color = Cesium.Color.fromCssColorString(color);
   }
 }
-
+// 改变等间距
 function changeStyleEqualSpace() {
+  // 直接基于currDataSource.entities.values;
   const min = minValueArray[year - 1970];
   const max = maxValueArray[year - 1970];
+  // 生成intervals
   let intervals = new Array(classifyN + 1);
   let colors = new Array(classifyN);
   const step = (max - min) / classifyN;
@@ -322,8 +332,9 @@ function changeStyleEqualSpace() {
   setClassifyColor(intervals, colors);
   changeLegendClassify(intervals, colors);
 }
-
+// 改变分位数
 function changeStyleQuartiles() {
+  // 需先将values读入数组
   const valueArray = [];
   let entities = currDataSource.entities.values;
   for (let i = 0; i < entities.length; i++) {
@@ -331,6 +342,7 @@ function changeStyleQuartiles() {
     valueArray.push(value);
   }
   valueArray.sort((a, b) => a - b);
+  // 生成intervals
   let intervals = new Array(classifyN + 1);
   let colors = new Array(classifyN);
   const step = entities.length / classifyN;
@@ -341,8 +353,9 @@ function changeStyleQuartiles() {
   setClassifyColor(intervals, colors);
   changeLegendClassify(intervals, colors);
 }
-
+// 改变自然间断（基于jenks，中间一坨计算和生成intervlas的方法不用管
 function changeStyleNature() {
+  // 需先将values读入数组
   const valueArray = [];
   let entities = currDataSource.entities.values;
   for (let i = 0; i < entities.length; i++) {
@@ -402,6 +415,7 @@ function changeStyleNature() {
     mat2[l][1] = v;
   }
   let k = valueArray.length;
+  // 生成intervals
   let intervals = [];
   for (i = 0, il = classifyN + 1; i < il; i++) {
     intervals.push(0);
