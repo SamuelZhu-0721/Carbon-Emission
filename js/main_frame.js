@@ -34,3 +34,5 @@ columnDragger.addEventListener("mousedown", function (e1) {
     document.removeEventListener("mouseup", up);
   });
 });
+
+

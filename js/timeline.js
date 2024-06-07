@@ -34,7 +34,7 @@ timelineSlider.addEventListener("mousedown", function (e1) {
   document.addEventListener("mousemove", move);
   document.addEventListener("mouseup", function up() {
     changeStyle(styleMethod);
-    changeLegend();
+    //changeLegend();
     document.removeEventListener("mousemove", move);
     document.removeEventListener("mouseup", up);
   });

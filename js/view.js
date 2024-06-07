@@ -18,3 +18,24 @@ modePicker_2_5d.addEventListener("click", function () {
   modePicker_3d.style.display = "block";
   viewer.scene.morphTo3D(1.5);
 });
+
+
+
+var handler = new Cesium.ScreenSpaceEventHandler(viewer.scene.canvas);
+handler.setInputAction(function (e) {
+  var pick = viewer.scene.pick(e.position);
+  //点击物体的属性都存在pick.id内部
+  if (pick&&pick.id) {
+    var area=area=pick.id._properties._SHAPE_AREA._value;
+    //console.log(area)
+    var cartographic=Cesium.Cartographic.fromCartesian(pick.primitive._actualPosition);
+    var lat = Cesium.Math.toDegrees(cartographic.latitude);
+    var lng = Cesium.Math.toDegrees(cartographic.longitude);
+    var height=Cesium.Cartesian3.fromDegrees(lng,lat,area*100).z;
+ 
+    viewer.camera.flyTo({
+      destination:Cesium.Cartesian3.fromDegrees(lng, lat, height),   
+    })
+    
+  }
+}, Cesium.ScreenSpaceEventType.LEFT_CLICK);

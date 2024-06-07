@@ -109,14 +109,25 @@ body {
   font-weight: 500;
 }
 
-.dataType {
+.dataType1 {
   padding-left: 30px;
   font-weight: 500;
   font-size: 20px;
   line-height: 50px;
   height: 50px;
 }
-.dataType:hover {
+.dataType1:hover {
+  background-color: #dbdff4;
+}
+
+.dataType2 {
+  padding-left: 40px;
+  font-weight: 400;
+  font-size: 15px;
+  line-height: 30px;
+  height: 30px;
+}
+.dataType2:hover {
   background-color: #dbdff4;
 }
 /* 样式选择 */
@@ -418,6 +429,7 @@ body {
 .legendArea h4 {
   margin: 4px 0 0 0;
   color: #3478f5;
+  text-align: center;
 }
 
 .legend {

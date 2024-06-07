@@ -12,6 +12,7 @@
     <script src="js/timeline.js" defer></script>
     <script src="js/view.js" defer></script>
     <script src="js/data.js" defer></script>
+    <script src="js/dataLoad.js" defer></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <link rel="stylesheet" href="cesium/Widgets/widgets.css">
     <link rel="stylesheet" href="./css/main_frame.css">
@@ -25,9 +26,18 @@
                     <h2>选择数据</h2>
                     <div class="intervals"></div>
                     <div id="dataHelp" class="iconButtons"></div>
-                    <div class="dataType">总碳排放</div>
-                    <div class="dataType">人均碳排放</div>
-                    <div class="dataType">清洁能源</div>
+                    <div id="totalCarbon" class="dataType1">总碳排放</div>
+                    <div id="buildings" class="dataType2">建筑排放</div>                     
+                    <div id="industry" class="dataType2">工业排放</div>
+                    <div id="transport" class="dataType2">交通排放</div>
+                    <div id="energySystem" class="dataType2">能源系统排放</div>
+                    <div id="AFOLU" class="dataType2">其他土地利用排放</div>
+                    <div id="perCarbon" class="dataType1">人均碳排放</div>
+                    <div id='cleanEnergy' class="dataType1">清洁能源</div>
+                    <div id="wind" class="dataType2">风能</div>
+                    <div id="solar" class="dataType2">太阳能</div>
+                    <div id="nuclear" class="dataType2">核能</div>
+                    <div id="hydro" class="dataType2">水电</div>
                 </div>
             </div>
         </div>

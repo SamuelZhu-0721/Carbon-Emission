@@ -1,6 +1,6 @@
 //界面初始化
 Cesium.Ion.defaultAccessToken =
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiJiMTFkNzAzZi04YmNiLTQ2ZWUtODJhNS05ZTJhOWEzNjQ4N2UiLCJpZCI6MjA1MjI0LCJpYXQiOjE3MTE2ODM3MDl9.evIRGTxcLDqQPhWH5goLjqVF3hf-EIp8CHOMdvTys_I";
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiI1MWMwN2Q3YS1hNmY2LTQyNGMtOTkzYS0xZWUwNzU3ZDQ1OWIiLCJpZCI6MjA1MjI2LCJpYXQiOjE3MTE2ODM3NDB9.xFT6aZMZ8iEI7Y8bOjLGccEQO48g2GZDhIeCHPJ1A20";
 const viewer = new Cesium.Viewer("cesiumContainer", {
   baseLayerPicker: false,
   animation: false,
@@ -40,3 +40,13 @@ viewer.scene.moon.show = false;
 //   // const entities = dataSource.entities.values;
 //   // viewer.dataSources.add(dataSource);
 // });
+
+viewer.camera.setView({
+  destination: {x: -3695288.431791321, y:13791004.176066725,z:10341618.403306393},
+    orientation: {
+        heading:6.283185307179586,
+        pitch:-1.5707963267948966,
+        roll:0
+    }     
+});
+//Cesium.Cartesian3.fromDegrees(centeropt.x, centeropt.y, centeropt.z || 0);

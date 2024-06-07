@@ -93,42 +93,42 @@ function hexToRgb(hex) {
 }
 
 
-// 加载total
-let currDataSource = null;
-Cesium.GeoJsonDataSource.load("../src/data_point/total_point.geojson", {})
-  .then(function (dataSource) {
-    currDataSource = dataSource;
-    addData(); // 待注释
-  })
-  .catch((e) => {
-    console.log(error);
-  });
+// // 加载total
+// let currDataSource = null;
+// Cesium.GeoJsonDataSource.load("../src/data_point/total_point.geojson", {})
+//   .then(function (dataSource) {
+//     currDataSource = dataSource;
+//     addData(); // 待注释
+//   })
+//   .catch((e) => {
+//     console.log(error);
+//   });
 
-// 加载total
-function addData() {
-  if (!currDataSource) console.log("nodata");
-  viewer.dataSources.add(currDataSource);
-  let entities = currDataSource.entities.values;
-  // 在加载时遍历得到当前数据所有国家，储存各个年份的最小值和最大值
-  for (let i = 0; i < entities.length; i++) {
-    for (let j = 1970; j <= 2020; j++) {
-      const value = entities[i].properties[`_F${j}`]._value;
-      if (value < minValueArray[j - 1970]) {
-        minValueArray[j - 1970] = value;
-      } else if (value > maxValueArray[j - 1970]) {
-        maxValueArray[j - 1970] = value;
-      }
-    }
-    entities[i].billboard = undefined;
-    entities[i].point = new Cesium.PointGraphics({
-      pixelSize: 15,
-      color: Cesium.Color.fromCssColorString("#ff0000"),
-      outlineWidth: 1,
-      outlineColor: Cesium.Color.fromCssColorString("#ffffff"),
-    });
-  }
-  // changeStyle();
-}
+// // 加载total
+// function addData() {
+//   if (!currDataSource) console.log("nodata");
+//   viewer.dataSources.add(currDataSource);
+//   let entities = currDataSource.entities.values;
+//   // 在加载时遍历得到当前数据所有国家，储存各个年份的最小值和最大值
+//   for (let i = 0; i < entities.length; i++) {
+//     for (let j = 1970; j <= 2020; j++) {
+//       const value = entities[i].properties[`_F${j}`]._value;
+//       if (value < minValueArray[j - 1970]) {
+//         minValueArray[j - 1970] = value;
+//       } else if (value > maxValueArray[j - 1970]) {
+//         maxValueArray[j - 1970] = value;
+//       }
+//     }
+//     entities[i].billboard = undefined;
+//     entities[i].point = new Cesium.PointGraphics({
+//       pixelSize: 15,
+//       color: Cesium.Color.fromCssColorString("#ff0000"),
+//       outlineWidth: 1,
+//       outlineColor: Cesium.Color.fromCssColorString("#ffffff"),
+//     });
+//   }
+//   // changeStyle();
+// }
 
 
 const classifyMethod = document.getElementById("classifyMethod");
@@ -301,8 +301,10 @@ function setClassifyColor(intervals, colors) {
     const g = startColor[1] + (endColor[1] - startColor[1]) * ratio;
     const b = startColor[2] + (endColor[2] - startColor[2]) * ratio;
     colors[i] =
-      "rgb(" + Math.round(r) + "," + Math.round(g) + "," + Math.round(b) + ")";
+      "rgb(" + Math.round(r) + "," + Math.round(g) + "," + Math.round(b) + "," + 0.8 + ")";
+    console.log(colors[i]);  
   }
+  console.log(colors)
   let entities = currDataSource.entities.values;
   for (let i = 0; i < entities.length; i++) {
     const value = entities[i].properties[`_F${year}`]._value;
