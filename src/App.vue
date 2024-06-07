@@ -1,17 +1,11 @@
 <template>
-  <cesium-viewer></cesium-viewer>
+  <menu-area></menu-area>
+  <show-area></show-area>
 </template>
 
 <script setup>
-import CesiumViewer from "./components/CesiumViewer.vue";
+import MenuArea from "./components/MenuArea.vue";
+import showArea from "./components/ShowArea.vue";
 </script>
 
-<style scoped>
-#cesiumContainer {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-}
-</style>
+<style scoped></style>
