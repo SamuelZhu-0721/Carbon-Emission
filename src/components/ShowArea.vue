@@ -3,7 +3,8 @@
     <div id="fakeMenuArea"></div>
     <div id="showArea">
       <div id="mapArea">
-        <div id="cesiumContainer"></div>
+        <!-- <div id="cesiumContainer"></div> -->
+        <cesium-viewer></cesium-viewer>
         <div id="toolsArea">
           <div id="search" class="iconButtons"></div>
           <div id="star" class="iconButtons"></div>
@@ -61,8 +62,13 @@
 
 <script>
 export default {
-  name: "MyComponent",
+  name: "ShowArea",
+  components: {
+    CesiumViewer,
+  },
 };
+
+import CesiumViewer from "./CesiumViewer.vue";
 </script>
 
 <style scoped>
@@ -89,7 +95,7 @@ export default {
 #mapArea {
   position: relative;
   flex: 3;
-  background-color: blue;
+  /* background-color: blue; */
 }
 #columnDragger {
   width: 5px;
@@ -111,6 +117,7 @@ export default {
   height: 96%;
   left: 0px;
 }
+
 /* 时间轴 */
 #timelineArea {
   opacity: 0.4;
