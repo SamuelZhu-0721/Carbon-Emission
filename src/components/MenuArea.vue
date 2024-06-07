@@ -45,7 +45,6 @@
               <option>4类</option>
               <option>5类</option>
             </select>
-            <!-- <div id="applyButton1">应用</div> -->
           </div>
           <div :class="intervals"></div>
           <div id="setRibbonArea">
@@ -53,7 +52,6 @@
             <canvas id="ribbon"></canvas>
             <input type="color" id="startColor" value="#ffff00" />
             <input type="color" id="endColor" value="#ff0000" />
-            <!-- <div id="applyButton2">应用</div> -->
           </div>
         </div>
       </div>
@@ -84,7 +82,7 @@ export default {
 };
 </script>
 
-<style scoped>
+<style>
 #cesiumContainer {
   position: absolute;
   top: 0;
@@ -126,11 +124,10 @@ export default {
 #starred:hover {
   background-image: url("../assets/icon_hover/收藏.png");
 }
-
-/*  */
 .iconContainer {
   width: 100%;
 }
+/*  */
 #menuArea {
   z-index: 100;
   position: absolute;
@@ -159,13 +156,7 @@ export default {
   justify-content: center;
   overflow: hidden;
 }
-/* .intervals{
-    height: 5px;
-    width: 10px;
-    margin-left: 20px;
-    margin-right: 20px;
-    background-color: #e3e3e3;
-  } */
+
 #startColor:active .infoRectangle,
 .mainButtons:hover .infoRectangle {
   width: 250px;
