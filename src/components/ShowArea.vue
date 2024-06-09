@@ -11,7 +11,7 @@
           <div id="modePicker_2_5d" class="iconButtons"></div>
           <div id="modePicker_2d" class="iconButtons"></div>
         </div>
-        <TimeLine></TimeLine>
+        <TimeLine ref="timeline"></TimeLine>
         <div id="legendArea1" class="legendArea">
           <h4>拉伸</h4>
           <div class="legend">
@@ -84,7 +84,6 @@ export default {
     },
     resize(e) {
       const deltaX = e.clientX - this.resizeStartX;
-      console.log(this.currChartAreaWidth);
       let newMapAreaWidth = this.currMapAreaWidth + deltaX;
       let newChartAreaWidth = this.currChartAreaWidth - deltaX;
       if (newMapAreaWidth < window.innerWidth / 2) {
@@ -102,7 +101,8 @@ export default {
       this.currChartAreaWidth = newChartAreaWidth;
       this.currMapAreaWidth = newMapAreaWidth;
       this.resizeStartX = e.clientX;
-      console.log(this.currChartAreaWidth);
+
+      this.$refs.timeline.initPosition();
     },
     stopResize() {
       window.removeEventListener("mousemove", this.resize);
