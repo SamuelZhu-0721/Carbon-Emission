@@ -24,7 +24,7 @@ onMounted(() => {
   viewer.scene.backgroundColor = Cesium.Color.fromCssColorString("#ffffff");
   viewer.scene.sun.show = false;
   viewer.scene.moon.show = false;
-  
+
   const tiandiToken = "368473092ec184171e181f0a27935857";
   viewer.imageryLayers.removeAll();
   const tiandiMapVec = new Cesium.UrlTemplateImageryProvider({
@@ -43,3 +43,13 @@ onMounted(() => {
   viewer.imageryLayers.addImageryProvider(tiandiMapCva);
 });
 </script>
+
+<style>
+#container {
+  height: 100%;
+  width: 100%;
+  display: grid;
+  grid-template-columns: 60px 1fr; /* 第一列固定宽度，第二、三列平分剩余空间 */
+  align-items: flex-start;
+}
+</style>

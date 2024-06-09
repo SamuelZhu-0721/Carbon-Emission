@@ -2,9 +2,8 @@
   <div id="container">
     <div id="fakeMenuArea"></div>
     <div id="showArea">
-      <div id="mapArea">
-        <!-- <div id="cesiumContainer"></div> -->
-        <cesium-viewer></cesium-viewer>
+      <div id="mapArea" ref="mapArea">
+        <CesiumViewer></CesiumViewer>
         <div id="toolsArea">
           <div id="search" class="iconButtons"></div>
           <div id="star" class="iconButtons"></div>
@@ -12,12 +11,7 @@
           <div id="modePicker_2_5d" class="iconButtons"></div>
           <div id="modePicker_2d" class="iconButtons"></div>
         </div>
-        <div id="timelineArea">
-          <h3 id="timelineYear">1970</h3>
-          <div id="timeline"></div>
-          <div id="timeline2"></div>
-          <div id="timelineSlider"></div>
-        </div>
+        <TimeLine></TimeLine>
         <div id="legendArea1" class="legendArea">
           <h4>拉伸</h4>
           <div class="legend">
@@ -36,8 +30,8 @@
         </div>
         <div id="stateArea"></div>
       </div>
-      <div id="columnDragger"></div>
-      <div id="chartArea">
+      <div id="columnDragger" @mousedown="startResize"></div>
+      <div id="chartArea" ref="chartArea">
         <div id="compareIcon" class="iconButtons"></div>
         <div id="compare" class="iconButtons">对比</div>
         <div id="pitGraphArea">
@@ -65,21 +59,63 @@ export default {
   name: "ShowArea",
   components: {
     CesiumViewer,
+    TimeLine,
+  },
+  data() {
+    return {
+      initChartAreaWidth: null,
+      initMapAreaWidth: null,
+      resizeStartX: null,
+      currChartAreaWidth: null,
+      currMapAreaWidth: null,
+    };
+  },
+  mounted() {
+    this.initChartAreaWidth = this.$refs.chartArea.offsetWidth;
+    this.initMapAreaWidth = this.$refs.mapArea.offsetWidth;
+    this.currChartAreaWidth = this.initChartAreaWidth;
+    this.currMapAreaWidth = this.initMapAreaWidth;
+  },
+  methods: {
+    startResize(e) {
+      this.resizeStartX = e.clientX;
+      window.addEventListener("mousemove", this.resize);
+      window.addEventListener("mouseup", this.stopResize);
+    },
+    resize(e) {
+      const deltaX = e.clientX - this.resizeStartX;
+      console.log(this.currChartAreaWidth);
+      let newMapAreaWidth = this.currMapAreaWidth + deltaX;
+      let newChartAreaWidth = this.currChartAreaWidth - deltaX;
+      if (newMapAreaWidth < window.innerWidth / 2) {
+        newMapAreaWidth = window.innerWidth / 2;
+        newChartAreaWidth = window.innerWidth / 2 - 65;
+        this.stopResize();
+      }
+      if (newChartAreaWidth < this.initChartAreaWidth) {
+        newChartAreaWidth = this.initChartAreaWidth;
+        newMapAreaWidth = this.initMapAreaWidth;
+        this.stopResize();
+      }
+      this.$refs.mapArea.style.flex = `0 0 ${newMapAreaWidth}px`;
+      this.$refs.chartArea.style.flex = `0 0 ${newChartAreaWidth}px`;
+      this.currChartAreaWidth = newChartAreaWidth;
+      this.currMapAreaWidth = newMapAreaWidth;
+      this.resizeStartX = e.clientX;
+      console.log(this.currChartAreaWidth);
+    },
+    stopResize() {
+      window.removeEventListener("mousemove", this.resize);
+      window.removeEventListener("mouseup", this.stopResize);
+    },
   },
 };
 
 import CesiumViewer from "./CesiumViewer.vue";
+import TimeLine from "./TimeLine.vue";
 </script>
 
-<style scoped>
-#container {
-  height: 100%;
-  width: 100%;
-  display: grid;
-  grid-template-columns: 60px 1fr; /* 第一列固定宽度，第二、三列平分剩余空间 */
-  align-items: flex-start;
-}
-
+<style>
 /* 第一列：菜单栏 */
 #fakeMenuArea {
   position: relative;
@@ -116,56 +152,6 @@ import CesiumViewer from "./CesiumViewer.vue";
   position: relative;
   height: 96%;
   left: 0px;
-}
-
-/* 时间轴 */
-#timelineArea {
-  opacity: 0.4;
-}
-#timelineArea:hover {
-  opacity: 1;
-}
-#timelineYear {
-  position: absolute;
-  top: 85%;
-  left: 20%;
-  font-size: 25px;
-  font-family: "Trebuchet MS", "Lucida Sans Unicode", "Lucida Grande",
-    "Lucida Sans", Arial, sans-serif;
-  color: #ea354400;
-  transform: translate(-50%, -60px);
-}
-#timelineArea:hover #timelineYear {
-  color: #ea3543;
-}
-#timeline {
-  position: absolute;
-  height: 25px;
-  width: 60%;
-  top: 85%;
-  left: 20%;
-  background-color: #ffe5e7;
-  border-radius: 5px;
-}
-#timeline2 {
-  position: absolute;
-  height: 25px;
-  width: 0;
-  top: 85%;
-  left: 20%;
-  background-color: #f1a2ab;
-  border-radius: 5px;
-}
-#timelineSlider {
-  position: absolute;
-  height: 25px;
-  width: 15px;
-  top: 85%;
-  left: 20%;
-  transform: translate(-50%, 0%);
-  /* background-color: #f1a2ab; */
-  background-color: #ea3543;
-  border-radius: 5px;
 }
 /* 工具区 */
 #toolsArea {

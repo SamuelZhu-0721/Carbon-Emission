@@ -1,11 +1,11 @@
 <template>
-  <menu-area></menu-area>
-  <show-area></show-area>
+  <MenuArea></MenuArea>
+  <ShowArea></ShowArea>
 </template>
 
 <script setup>
 import MenuArea from "./components/MenuArea.vue";
-import showArea from "./components/ShowArea.vue";
+import ShowArea from "./components/ShowArea.vue";
 </script>
 
 <style>
