@@ -1,11 +1,31 @@
 <template>
-  <MenuArea></MenuArea>
+  <MenuArea @data-clicked="handleDataClicked"></MenuArea>
   <ShowArea></ShowArea>
 </template>
 
 <script setup>
 import MenuArea from "./components/MenuArea.vue";
 import ShowArea from "./components/ShowArea.vue";
+</script>
+
+<script>
+export default {
+  data() {
+    return {
+      year: 1970,
+      currData: null,
+      styleMethod: "stretching",
+      stretchingN: 2,
+      classifyN: 3,
+    };
+  },
+  method: {
+    handleDataClicked(dataType) {
+      this.currData = dataType;
+      console.log(this.currData);
+    },
+  },
+};
 </script>
 
 <style>

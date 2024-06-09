@@ -6,7 +6,7 @@
           <h2>选择数据</h2>
           <div :class="intervals"></div>
           <div id="dataHelp" :class="['iconButtons']"></div>
-          <div id="totalCarbon" :class="dataType1">总碳排放</div>
+          <div id="totalCarbon" :class="dataType1" @click="$emit('data-clicked', 'total')">总碳排放</div>
           <div id="buildings" :class="dataType2">建筑排放</div>
           <div id="industry" :class="dataType2">工业排放</div>
           <div id="transport" :class="dataType2">交通排放</div>

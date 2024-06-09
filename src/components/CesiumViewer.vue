@@ -41,7 +41,36 @@ onMounted(() => {
   });
   viewer.imageryLayers.addImageryProvider(tiandiMapVec);
   viewer.imageryLayers.addImageryProvider(tiandiMapCva);
+
+  // this.addData();
+  Cesium.GeoJsonDataSource.load("./data/total.geojson")
+    .then((dataSource) => {
+      viewer.dataSources.add(dataSource);
+    })
+    .catch((e) => {
+      console.log(error);
+    });
 });
+</script>
+
+<script>
+export default {
+  data() {
+    return {
+      currData: "total",
+      styleMethod: "stretching",
+      stretchingN: 2,
+      classifyN: 3,
+    };
+  },
+  methods: {
+    addData() {
+      console.log(1);
+      const dataUrl = "./data/" + this.currData + ".geojson";
+      console.log(dataUrl);
+    },
+  },
+};
 </script>
 
 <style>
