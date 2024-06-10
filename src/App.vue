@@ -1,6 +1,6 @@
 <template>
   <MenuArea @data-clicked="handleDataClicked"></MenuArea>
-  <ShowArea></ShowArea>
+  <ShowArea :currData="currData"></ShowArea>
 </template>
 
 <script setup>
@@ -19,10 +19,10 @@ export default {
       classifyN: 3,
     };
   },
-  method: {
+  methods: {
     handleDataClicked(dataType) {
       this.currData = dataType;
-      console.log(this.currData);
+      console.log("APP: "+this.currData);
     },
   },
 };

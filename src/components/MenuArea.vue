@@ -4,14 +4,13 @@
       <div :class="['mainButtons', 'iconButtons']" id="pickData">
         <div :class="infoRectangle">
           <h2>选择数据</h2>
-          <div :class="intervals"></div>
           <div id="dataHelp" :class="['iconButtons']"></div>
           <div id="totalCarbon" :class="dataType1" @click="$emit('data-clicked', 'total')">总碳排放</div>
-          <div id="buildings" :class="dataType2">建筑排放</div>
-          <div id="industry" :class="dataType2">工业排放</div>
-          <div id="transport" :class="dataType2">交通排放</div>
-          <div id="energySystem" :class="dataType2">能源系统排放</div>
-          <div id="AFOLU" :class="dataType2">其他土地利用排放</div>
+          <div id="buildings" :class="dataType2" @click="$emit('data-clicked', 'buildings')">建筑排放</div>
+          <div id="industry" :class="dataType2" @click="$emit('data-clicked', 'industry')">工业排放</div>
+          <div id="transport" :class="dataType2" @click="$emit('data-clicked', 'transport')">交通排放</div>
+          <div id="energySystem" :class="dataType2" @click="$emit('data-clicked', 'energy')">能源系统排放</div>
+          <div id="AFOLU" :class="dataType2" @click="$emit('data-clicked', 'AFOLU')">其他土地利用排放</div>
           <div id="perCarbon" :class="dataType1">人均碳排放</div>
           <div id="cleanEnergy" :class="dataType1">清洁能源</div>
           <div id="wind" :class="dataType2">风能</div>

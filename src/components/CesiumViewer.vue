@@ -4,7 +4,17 @@
 
 <script setup>
 import * as Cesium from "cesium";
-import { onMounted } from "vue";
+import { onMounted, watch, ref } from "vue";
+
+const props = defineProps({
+  currData: {
+    type: String,
+    required: true,
+  },
+});
+
+const myViewer = ref(null);
+const addedData = ref("total");
 
 onMounted(() => {
   Cesium.Ion.defaultAccessToken =
@@ -42,35 +52,42 @@ onMounted(() => {
   viewer.imageryLayers.addImageryProvider(tiandiMapVec);
   viewer.imageryLayers.addImageryProvider(tiandiMapCva);
 
-  // this.addData();
-  Cesium.GeoJsonDataSource.load("./data/total.geojson")
+  // Cesium.GeoJsonDataSource.load("./data/total.geojson")
+  //   .then((dataSource) => {
+  //     viewer.dataSources.add(dataSource);
+  //   })
+  //   .catch((e) => {
+  //     console.log(error);
+  //   });
+
+  myViewer.value = viewer;
+  // console.log(viewer);
+  console.log(myViewer.value);
+});
+
+const addData = () => {
+  const dataUrl = "./data/" + addedData.value + ".geojson";
+  console.log(dataUrl);
+  const viewer = myViewer.value;
+  viewer.dataSources.removeAll();
+  Cesium.GeoJsonDataSource.load(dataUrl)
     .then((dataSource) => {
       viewer.dataSources.add(dataSource);
     })
     .catch((e) => {
       console.log(error);
     });
-});
-</script>
-
-<script>
-export default {
-  data() {
-    return {
-      currData: "total",
-      styleMethod: "stretching",
-      stretchingN: 2,
-      classifyN: 3,
-    };
-  },
-  methods: {
-    addData() {
-      console.log(1);
-      const dataUrl = "./data/" + this.currData + ".geojson";
-      console.log(dataUrl);
-    },
-  },
 };
+
+watch(
+  () => props.currData,
+  (newValue) => {
+    if (newValue) {
+      addedData.value = newValue;
+      addData();
+    }
+  }
+);
 </script>
 
 <style>

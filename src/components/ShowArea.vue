@@ -3,7 +3,7 @@
     <div id="fakeMenuArea"></div>
     <div id="showArea">
       <div id="mapArea" ref="mapArea">
-        <CesiumViewer></CesiumViewer>
+        <CesiumViewer :currData="currData"></CesiumViewer>
         <div id="toolsArea">
           <div id="search" class="iconButtons"></div>
           <div id="star" class="iconButtons"></div>
@@ -61,6 +61,12 @@ export default {
     CesiumViewer,
     TimeLine,
   },
+  props: {
+    currData: {
+      type: String,
+      required: true,
+    },
+  },
   data() {
     return {
       initChartAreaWidth: null,
@@ -108,6 +114,10 @@ export default {
       window.removeEventListener("mousemove", this.resize);
       window.removeEventListener("mouseup", this.stopResize);
     },
+
+    // catch() {
+    //   console.log("catch");
+    // },
   },
 };
 
