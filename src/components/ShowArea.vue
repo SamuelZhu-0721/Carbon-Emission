@@ -3,7 +3,12 @@
     <div id="fakeMenuArea"></div>
     <div id="showArea">
       <div id="mapArea" ref="mapArea">
-        <CesiumViewer :currData="currData"></CesiumViewer>
+        <CesiumViewer
+          :currData="currData"
+          :styleMethod="styleMethod"
+          :stretchingN="stretchingN"
+          :classifyN="classifyN"
+        ></CesiumViewer>
         <div id="toolsArea">
           <div id="search" class="iconButtons"></div>
           <div id="star" class="iconButtons"></div>
@@ -64,6 +69,18 @@ export default {
   props: {
     currData: {
       type: String,
+      required: true,
+    },
+    styleMethod: {
+      type: String,
+      required: true,
+    },
+    classifyN: {
+      type: Number,
+      required: true,
+    },
+    stretchingN: {
+      type: Number,
       required: true,
     },
   },

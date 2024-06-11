@@ -5,12 +5,48 @@
         <div :class="infoRectangle">
           <h2>选择数据</h2>
           <div id="dataHelp" :class="['iconButtons']"></div>
-          <div id="totalCarbon" :class="dataType1" @click="$emit('data-clicked', 'total')">总碳排放</div>
-          <div id="buildings" :class="dataType2" @click="$emit('data-clicked', 'buildings')">建筑排放</div>
-          <div id="industry" :class="dataType2" @click="$emit('data-clicked', 'industry')">工业排放</div>
-          <div id="transport" :class="dataType2" @click="$emit('data-clicked', 'transport')">交通排放</div>
-          <div id="energySystem" :class="dataType2" @click="$emit('data-clicked', 'energy')">能源系统排放</div>
-          <div id="AFOLU" :class="dataType2" @click="$emit('data-clicked', 'AFOLU')">其他土地利用排放</div>
+          <div
+            id="totalCarbon"
+            :class="dataType1"
+            @click="$emit('data-clicked', 'total')"
+          >
+            总碳排放
+          </div>
+          <div
+            id="buildings"
+            :class="dataType2"
+            @click="$emit('data-clicked', 'buildings')"
+          >
+            建筑排放
+          </div>
+          <div
+            id="industry"
+            :class="dataType2"
+            @click="$emit('data-clicked', 'industry')"
+          >
+            工业排放
+          </div>
+          <div
+            id="transport"
+            :class="dataType2"
+            @click="$emit('data-clicked', 'transport')"
+          >
+            交通排放
+          </div>
+          <div
+            id="energySystem"
+            :class="dataType2"
+            @click="$emit('data-clicked', 'energy')"
+          >
+            能源系统排放
+          </div>
+          <div
+            id="AFOLU"
+            :class="dataType2"
+            @click="$emit('data-clicked', 'AFOLU')"
+          >
+            其他土地利用排放
+          </div>
           <div id="perCarbon" :class="dataType1">人均碳排放</div>
           <div id="cleanEnergy" :class="dataType1">清洁能源</div>
           <div id="wind" :class="dataType2">风能</div>
@@ -24,28 +60,34 @@
       <div :class="['mainButtons', 'iconButtons']" id="pickStyle">
         <div :class="infoRectangle">
           <h2>选择样式</h2>
-          <div :class="intervals"></div>
           <div id="classifyMethodArea">
             <div :class="selectStyleHeading">分类方法</div>
-            <select id="classifyMethod">
+            <select id="classifyMethod" @change="changeClassifyMethod">
               <option>拉伸</option>
               <option>自然间断法</option>
               <option>等间距法</option>
               <option>分位数法</option>
             </select>
-            <select id="stretchingNumber">
+            <select
+              id="stretchingNumber"
+              v-show="selectedMethod === 'stretching'"
+              @change="changeStretchingN"
+            >
               <option>平方根</option>
               <option>线性</option>
               <option>立方根</option>
               <option>六次根</option>
             </select>
-            <select id="classifyNumber">
+            <select
+              id="classifyNumber"
+              v-show="selectedMethod !== 'stretching'"
+              @change="changeClassifyN"
+            >
               <option>3类</option>
               <option>4类</option>
               <option>5类</option>
             </select>
           </div>
-          <div :class="intervals"></div>
           <div id="setRibbonArea">
             <div :class="selectStyleHeading">色带设置</div>
             <canvas id="ribbon"></canvas>
@@ -76,7 +118,39 @@ export default {
       selectStyleHeading: "selectStyleHeading",
       dataType1: "dataType1",
       dataType2: "dataType2",
+      selectedMethod: "stretching",
     };
+  },
+  methods: {
+    changeClassifyMethod(event) {
+      const selcectValue = event.target.value;
+      switch (selcectValue) {
+        case "拉伸":
+          this.selectedMethod = "stretching";
+          break;
+        case "自然间断法":
+          this.selectedMethod = "nature";
+          break;
+        case "等间距法":
+          this.selectedMethod = "equalSpace";
+          break;
+        case "分位数法":
+          this.selectedMethod = "quartiles";
+          break;
+        default:
+          console.log("unknown method");
+          break;
+      }
+      this.$emit("select-method-changed", this.selectedMethod);
+    },
+    changeStretchingN(event) {
+      const selcectValue = event.target.value;
+      this.$emit("select-stretchingN-changed", selcectValue);
+    },
+    changeClassifyN(event) {
+      const selcectValue = event.target.value;
+      this.$emit("select-classifyN-changed", selcectValue);
+    },
   },
 };
 </script>
@@ -239,10 +313,6 @@ export default {
   padding-right: 10%;
   font-size: 17px;
   width: 80%;
-}
-
-#classifyNumber {
-  display: none;
 }
 
 #ribbon {
