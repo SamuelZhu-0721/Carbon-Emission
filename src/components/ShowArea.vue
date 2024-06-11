@@ -8,6 +8,8 @@
           :styleMethod="styleMethod"
           :stretchingN="stretchingN"
           :classifyN="classifyN"
+          :startColor="startColor"
+          :endColor="endColor"
         ></CesiumViewer>
         <div id="toolsArea">
           <div id="search" class="iconButtons"></div>
@@ -83,6 +85,14 @@ export default {
       type: Number,
       required: true,
     },
+    startColor: {
+      type: String,
+      required: true,
+    },
+    endColor: {
+      type: String,
+      required: true,
+    },
   },
   data() {
     return {
@@ -131,10 +141,6 @@ export default {
       window.removeEventListener("mousemove", this.resize);
       window.removeEventListener("mouseup", this.stopResize);
     },
-
-    // catch() {
-    //   console.log("catch");
-    // },
   },
 };
 

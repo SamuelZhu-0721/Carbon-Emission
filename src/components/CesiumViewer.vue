@@ -37,6 +37,14 @@ const props = defineProps({
     type: Number,
     required: true,
   },
+  startColor: {
+    type: String,
+    required: true,
+  },
+  endColor: {
+    type: String,
+    required: true,
+  },
 });
 
 watch(
@@ -57,7 +65,6 @@ watch(
       alert("请选择数据！");
     } else {
       changeStyle();
-      console.log(1);
     }
   }
 );
@@ -68,8 +75,8 @@ watch(
     stretchingN.value = newValue;
     if (currDataSource.value === null) {
       alert("请选择数据！");
+    } else {
       changeStyle();
-      console.log(2);
     }
   }
 );
@@ -80,8 +87,32 @@ watch(
     classifyN.value = newValue;
     if (currDataSource.value === null) {
       alert("请选择数据！");
+    } else {
       changeStyle();
-      console.log(3);
+    }
+  }
+);
+watch(
+  () => props.startColor,
+  (newValue) => {
+    console.log("newStart:" + newValue);
+    startColor.value = newValue;
+    if (currDataSource.value === null) {
+      alert("请选择数据！");
+    } else {
+      changeStyle();
+    }
+  }
+);
+watch(
+  () => props.endColor,
+  (newValue) => {
+    console.log("endStart:" + newValue);
+    endColor.value = newValue;
+    if (currDataSource.value === null) {
+      alert("请选择数据！");
+    } else {
+      changeStyle();
     }
   }
 );
@@ -213,12 +244,12 @@ function setClassifyColor(intervals, colors) {
       0.6 +
       ")";
   }
-  console.log(colors);
+  // console.log(colors);
   let entities = currDataSource.value.entities.values;
   for (let i = 0; i < entities.length; i++) {
     const value = entities[i].properties[`_F${year.value}`]._value;
     let gear;
-    console.log(intervals);
+    // console.log(intervals);
     for (let i = 0; i < classifyN.value; i++) {
       if (value >= intervals[i] && value <= intervals[i + 1]) {
         gear = i;
@@ -307,7 +338,7 @@ const changeStyleQuartiles = () => {
   for (let i = 0; i < classifyN.value; i++) {
     intervals[i] = valueArray[Math.floor(i * step)];
   }
-  intervals[classifyN] = valueArray[entities.length - 1];
+  intervals[classifyN.value] = valueArray[entities.length - 1];
   console.log(intervals);
   setClassifyColor(intervals, colors);
 };
@@ -374,9 +405,10 @@ const changeStyleNature = () => {
   let k = valueArray.length;
   // 生成intervals
   let intervals = [];
-  for (i = 0, il = classifyN.value + 1; i < il; i++) {
+  for (let i = 0, il = classifyN.value + 1; i < il; i++) {
     intervals.push(0);
   }
+
   intervals[classifyN.value] = parseFloat(valueArray[valueArray.length - 1]);
   intervals[0] = parseFloat(valueArray[0]);
   let countNum = classifyN.value;
@@ -399,7 +431,7 @@ const changeStyleNature = () => {
   height: 100%;
   width: 100%;
   display: grid;
-  grid-template-columns: 60px 1fr; /* 第一列固定宽度，第二、三列平分剩余空间 */
+  grid-template-columns: 60px 1fr;
   align-items: flex-start;
 }
 </style>

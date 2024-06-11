@@ -70,7 +70,7 @@
             </select>
             <select
               id="stretchingNumber"
-              v-show="selectedMethod === 'stretching'"
+              v-show="styleMethod === 'stretching'"
               @change="changeStretchingN"
             >
               <option>平方根</option>
@@ -80,7 +80,7 @@
             </select>
             <select
               id="classifyNumber"
-              v-show="selectedMethod !== 'stretching'"
+              v-show="styleMethod !== 'stretching'"
               @change="changeClassifyN"
             >
               <option>3类</option>
@@ -91,8 +91,18 @@
           <div id="setRibbonArea">
             <div :class="selectStyleHeading">色带设置</div>
             <canvas id="ribbon"></canvas>
-            <input type="color" id="startColor" value="#ffff00" />
-            <input type="color" id="endColor" value="#ff0000" />
+            <input
+              type="color"
+              id="startColor"
+              v-model="startColor"
+              @change="changeStartColor"
+            />
+            <input
+              type="color"
+              id="endColor"
+              v-model="endColor"
+              @change="changeEndColor"
+            />
           </div>
         </div>
       </div>
@@ -118,7 +128,11 @@ export default {
       selectStyleHeading: "selectStyleHeading",
       dataType1: "dataType1",
       dataType2: "dataType2",
-      selectedMethod: "stretching",
+      styleMethod: "stretching",
+      stretchingN: 2,
+      classifyN: 3,
+      startColor: "#FFFF00",
+      endColor: "#FF0000",
     };
   },
   methods: {
@@ -126,22 +140,22 @@ export default {
       const selcectValue = event.target.value;
       switch (selcectValue) {
         case "拉伸":
-          this.selectedMethod = "stretching";
+          this.styleMethod = "stretching";
           break;
         case "自然间断法":
-          this.selectedMethod = "nature";
+          this.styleMethod = "nature";
           break;
         case "等间距法":
-          this.selectedMethod = "equalSpace";
+          this.styleMethod = "equalSpace";
           break;
         case "分位数法":
-          this.selectedMethod = "quartiles";
+          this.styleMethod = "quartiles";
           break;
         default:
           console.log("unknown method");
           break;
       }
-      this.$emit("select-method-changed", this.selectedMethod);
+      this.$emit("select-method-changed", this.styleMethod);
     },
     changeStretchingN(event) {
       const selcectValue = event.target.value;
@@ -150,6 +164,12 @@ export default {
     changeClassifyN(event) {
       const selcectValue = event.target.value;
       this.$emit("select-classifyN-changed", selcectValue);
+    },
+    changeStartColor() {
+      this.$emit("change-start-color", this.startColor);
+    },
+    changeEndColor() {
+      this.$emit("change-end-color", this.endColor);
     },
   },
 };

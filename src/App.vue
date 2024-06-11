@@ -4,12 +4,16 @@
     @select-method-changed="handleSelectMethodChanged"
     @select-stretchingN-changed="handleSelectStretchingNChanged"
     @select-classifyN-changed="handleSelectClassifyNChanged"
+    @change-start-color="handleChangeStartColor"
+    @change-end-color="handleChangeEndColor"
   ></MenuArea>
   <ShowArea
     :currData="currData"
     :styleMethod="styleMethod"
     :stretchingN="stretchingN"
     :classifyN="classifyN"
+    :startColor="startColor"
+    :endColor="endColor"
   ></ShowArea>
 </template>
 
@@ -27,6 +31,8 @@ export default {
       styleMethod: "stretching",
       stretchingN: 2,
       classifyN: 3,
+      startColor: "#FFFF00",
+      endColor: "FF0000",
     };
   },
   methods: {
@@ -74,6 +80,14 @@ export default {
           break;
       }
       console.log("APP-classifyN: " + this.classifyN);
+    },
+    handleChangeStartColor(value) {
+      this.startColor = value;
+      // console.log("APP-startColor: " + this.startColor);
+    },
+    handleChangeEndColor(value) {
+      this.endColor = value;
+      // console.log("APP-endColor: " + this.endColor);
     },
   },
 };
