@@ -28,7 +28,7 @@ export default {
     return {
       year: 1970,
       currData: null,
-      styleMethod: "stretching",
+      styleMethod: "nature",
       stretchingN: 2,
       classifyN: 3,
       startColor: "#FFFF00",

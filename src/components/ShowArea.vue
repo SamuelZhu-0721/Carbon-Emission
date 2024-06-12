@@ -10,6 +10,7 @@
           :classifyN="classifyN"
           :startColor="startColor"
           :endColor="endColor"
+          :year="year"
         ></CesiumViewer>
         <div id="toolsArea">
           <div id="search" class="iconButtons"></div>
@@ -18,8 +19,8 @@
           <div id="modePicker_2_5d" class="iconButtons"></div>
           <div id="modePicker_2d" class="iconButtons"></div>
         </div>
-        <TimeLine ref="timeline"></TimeLine>
-        <div id="legendArea1" class="legendArea">
+        <TimeLine ref="timeline" @change-year="handleChangeYear"></TimeLine>
+        <!-- <div id="legendArea1" class="legendArea">
           <h4>拉伸</h4>
           <div class="legend">
             <div id="legendRibbonArea">
@@ -30,11 +31,11 @@
               <div id="stretchingMin">0</div>
             </div>
           </div>
-        </div>
-        <div id="legendArea2" class="legendArea">
+        </div> -->
+        <!-- <div id="legendArea2" class="legendArea">
           <h4>分层设色</h4>
           <div class="legend" id="legend2"></div>
-        </div>
+        </div> -->
         <div id="stateArea"></div>
       </div>
       <div id="columnDragger" @mousedown="startResize"></div>
@@ -43,7 +44,9 @@
         <div id="compare" class="iconButtons">对比</div>
         <div id="pitGraphArea">
           <span class="graphHeading">碳排放类型占比</span>
-          <div class="graphArea"></div>
+          <div class="graphArea">
+            <!-- <PieChart></PieChart> -->
+          </div>
         </div>
         <div id="lineGraphArea">
           <span class="graphHeading">碳排放时序变化</span>
@@ -101,6 +104,7 @@ export default {
       resizeStartX: null,
       currChartAreaWidth: null,
       currMapAreaWidth: null,
+      year: 1970,
     };
   },
   mounted() {
@@ -140,6 +144,10 @@ export default {
     stopResize() {
       window.removeEventListener("mousemove", this.resize);
       window.removeEventListener("mouseup", this.stopResize);
+    },
+    handleChangeYear(value) {
+      this.year = value;
+      console.log("showArea-year2:" + this.year);
     },
   },
 };
@@ -306,99 +314,4 @@ import TimeLine from "./TimeLine.vue";
   background-color: #f6f6f6;
 }
 
-/*  */
-.legendArea {
-  display: none;
-  border-radius: 10px;
-  background-color: #dee6ff;
-  position: absolute;
-  width: 17%;
-  /* height: 200px; */
-  bottom: 40px;
-  right: 10px;
-  color: #000000;
-  padding: 5px 10px 5px 10px;
-}
-
-.legendArea h4 {
-  margin: 4px 0 0 0;
-  color: #3478f5;
-  text-align: center;
-}
-
-.legend {
-  height: 90%;
-  width: 100%;
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  color: #3478f5;
-  font-weight: 700;
-}
-
-#legendRibbonArea,
-#legendLabelArea {
-  height: 90%;
-  width: 50%;
-}
-
-#legendRibbonArea {
-  /* background-color: #4e9a4b; */
-  width: 30%;
-}
-#legendLabelArea {
-  width: 70%;
-  display: flex;
-  /* justify-content: space-between; */
-  flex-direction: column;
-}
-#legendRibbon {
-  /* margin-top: 10%; */
-  width: 100%;
-  height: 150px;
-  border-radius: 5px;
-}
-#stretchingMax,
-#stretchingMin {
-  margin-left: 10px;
-}
-
-#stretchingMin {
-  margin-top: auto;
-}
-
-/* #legendArea2 {
-    display: none;
-  } */
-#legend2 {
-  padding-top: 10px;
-  padding-left: 5px;
-  padding-right: 5px;
-  height: 85%;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  align-items: center;
-}
-.classifyLabel {
-  font-size: 15px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  width: 100%;
-}
-
-.classifyColor {
-  margin-bottom: 5px;
-  border: 2px solid rgb(255, 255, 255);
-  background-color: #ff0101;
-  width: 24px;
-  height: 24px;
-  border-radius: 12px;
-}
-
-.classifyNumber {
-  margin-left: 10px;
-  font-weight: 500;
-}
 </style>

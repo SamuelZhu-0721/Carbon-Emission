@@ -1,8 +1,11 @@
 <template>
-  <div id="cesiumContainer"></div>
+  <div id="cesiumContainer">
+    <Legend :legendItems="legendItems" :styleMethod="styleMethod"></Legend>
+  </div>
 </template>
 
 <script setup>
+import Legend from "./Legend.vue";
 import * as Cesium from "cesium";
 import { onMounted, watch, ref } from "vue";
 
@@ -11,10 +14,12 @@ const addedData = ref("total");
 const currDataSource = ref(null);
 const startColor = ref(null);
 const endColor = ref(null);
-const styleMethod = ref("stretching");
+const styleMethod = ref("nature");
 const stretchingN = ref(2);
 const classifyN = ref(3);
 const year = ref(1970);
+
+const legendItems = ref([]); // 用于存储图例项
 
 const minValueArray = ref(new Array(51).fill(Number.MAX_VALUE));
 const maxValueArray = ref(new Array(51).fill(Number.MIN_VALUE));
@@ -44,6 +49,11 @@ const props = defineProps({
   endColor: {
     type: String,
     required: true,
+  },
+  year: {
+    type: Number,
+    required: true,
+    default: 1970,
   },
 });
 
@@ -116,6 +126,17 @@ watch(
     }
   }
 );
+watch(
+  () => props.year,
+  (newValue) => {
+    year.value = newValue;
+    if (currDataSource.value === null) {
+      alert("请选择数据！");
+    } else {
+      changeStyle();
+    }
+  }
+);
 
 onMounted(() => {
   Cesium.Ion.defaultAccessToken =
@@ -172,7 +193,12 @@ const addData = () => {
       dataSource.clustering.point = true;
       dataSource.clustering.pixelRange = 5; //聚合距离，小于这个距离会被融合
       dataSource.clustering.minimumClusterSize = 3; //每个聚合点的最小个数};
-
+      for (let i = 0; i < minValueArray.value.length; i++) {
+        minValueArray.value[i] = Number.MAX_VALUE;
+      }
+      for (let i = 0; i < maxValueArray.value.length; i++) {
+        maxValueArray.value[i] = Number.MIN_VALUE;
+      }
       let entities = dataSource.entities.values;
       // 在加载时遍历得到当前数据所有国家，储存各个年份的最小值和最大值
       for (let i = 0; i < entities.length; i++) {
@@ -279,6 +305,13 @@ const changeStyle = () => {
       console.log("Unknown command!");
       break;
   }
+  legendItems.value = generateLegendItems(
+    startColor.value,
+    endColor.value,
+    minValueArray.value[year.value - 1970],
+    maxValueArray.value[year.value - 1970],
+    classifyN.value
+  );
 };
 const changeStyleStretching = () => {
   console.log("in changeStyleStretching");
@@ -423,6 +456,39 @@ const changeStyleNature = () => {
   }
   let colors = new Array(classifyN.value);
   setClassifyColor(intervals, colors);
+};
+
+// 生成图例项
+const generateLegendItems = (
+  startColor,
+  endColor,
+  minValue,
+  maxValue,
+  steps
+) => {
+  console.log("legend change");
+  const items = [];
+  const startColorValue = hexToRgb(startColor);
+  const endColorValue = hexToRgb(endColor);
+  const step = (maxValue - minValue) / steps;
+  for (let i = 0; i < steps; i++) {
+    const ratio = i / (steps - 1);
+    const r =
+      startColorValue[0] + (endColorValue[0] - startColorValue[0]) * ratio;
+    const g =
+      startColorValue[1] + (endColorValue[1] - startColorValue[1]) * ratio;
+    const b =
+      startColorValue[2] + (endColorValue[2] - startColorValue[2]) * ratio;
+    items.push({
+      color: `rgb(${Math.round(r)}, ${Math.round(g)}, ${Math.round(b)},0.6)`,
+      label: `${(minValue + (step * i) / 100000000).toFixed(1)}亿 - ${(
+        minValue +
+        (step * (i + 1)) / 100000000
+      ).toFixed(1)}亿`,
+    });
+  }
+  // console.log(items);
+  return items;
 };
 </script>
 

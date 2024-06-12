@@ -63,8 +63,8 @@
           <div id="classifyMethodArea">
             <div :class="selectStyleHeading">分类方法</div>
             <select id="classifyMethod" @change="changeClassifyMethod">
-              <option>拉伸</option>
               <option>自然间断法</option>
+              <!-- <option>拉伸</option> -->
               <option>等间距法</option>
               <option>分位数法</option>
             </select>
@@ -128,7 +128,7 @@ export default {
       selectStyleHeading: "selectStyleHeading",
       dataType1: "dataType1",
       dataType2: "dataType2",
-      styleMethod: "stretching",
+      styleMethod: "nature",
       stretchingN: 2,
       classifyN: 3,
       startColor: "#FFFF00",

@@ -75,6 +75,8 @@ export default {
     },
     handleMouseUp() {
       this.isDragging = false;
+      console.log(this.year);
+      this.$emit("change-year", this.year);
       document.removeEventListener("mousemove", this.handleMouseMove);
       document.removeEventListener("mouseup", this.handleMouseUp);
     },
