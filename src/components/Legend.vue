@@ -1,6 +1,7 @@
 <template>
-  <div class="legendArea">
-    <h4>分类方法:{{ styleMethodCHN }}</h4>
+  <div v-show="currData !== null" class="legendArea">
+    <h4>{{ currData }}</h4>
+    <!-- <h4>分类方法:{{ styleMethodCHN }}</h4> -->
     <div id="legend">
       <div
         v-for="(item, index) in legendItems"
@@ -22,6 +23,7 @@ export default {
   data() {
     return {
       styleMethodCHN: "自然间断法",
+      currData: null,
     };
   },
   props: {
@@ -34,6 +36,11 @@ export default {
       type: String,
       required: true,
       default: "nature",
+    },
+    addedData: {
+      type: String,
+      required: true,
+      default: null,
     },
   },
   watch: {
@@ -53,6 +60,30 @@ export default {
           break;
       }
       console.log(this.styleMethodCHN);
+    },
+    addedData(newValue) {
+      switch (newValue) {
+        case "total":
+          this.currData = "总碳排";
+          break;
+        case "buildings":
+          this.currData = "建筑碳排";
+          break;
+        case "energy":
+          this.currData = "能源碳排";
+          break;
+        case "transport":
+          this.currData = "交通碳排";
+          break;
+        case "AFOLU":
+          this.currData = "其他碳排";
+          break;
+        default:
+          console.log("unknown type");
+          this.currData = "其他碳排";
+          break;
+      }
+      console.log(this.currData);
     },
   },
 };

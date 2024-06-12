@@ -1,6 +1,10 @@
 <template>
   <div id="cesiumContainer">
-    <Legend :legendItems="legendItems" :styleMethod="styleMethod"></Legend>
+    <Legend
+      :legendItems="legendItems"
+      :styleMethod="styleMethod"
+      :addedData="addedData"
+    ></Legend>
   </div>
 </template>
 
@@ -10,7 +14,7 @@ import * as Cesium from "cesium";
 import { onMounted, watch, ref } from "vue";
 
 const myViewer = ref(null);
-const addedData = ref("total");
+const addedData = ref(null);
 const currDataSource = ref(null);
 const startColor = ref(null);
 const endColor = ref(null);
@@ -54,6 +58,11 @@ const props = defineProps({
     type: Number,
     required: true,
     default: 1970,
+  },
+  addedData: {
+    type: String,
+    required: true,
+    default: null,
   },
 });
 

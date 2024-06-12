@@ -20,23 +20,15 @@
           <div id="modePicker_2d" class="iconButtons"></div>
         </div>
         <TimeLine ref="timeline" @change-year="handleChangeYear"></TimeLine>
-        <!-- <div id="legendArea1" class="legendArea">
-          <h4>拉伸</h4>
-          <div class="legend">
-            <div id="legendRibbonArea">
-              <canvas id="legendRibbon"></canvas>
-            </div>
-            <div id="legendLabelArea">
-              <div id="stretchingMax">0</div>
-              <div id="stretchingMin">0</div>
-            </div>
-          </div>
-        </div> -->
-        <!-- <div id="legendArea2" class="legendArea">
-          <h4>分层设色</h4>
-          <div class="legend" id="legend2"></div>
-        </div> -->
-        <div id="stateArea"></div>
+        <div id="stateArea">
+          <span class="stateLabel">数据源：{{ currDataCHN }}</span>
+          <span v-show="currDataCHN !== '无'" class="stateLabel"
+            >年份：{{ year }}</span
+          >
+          <span v-show="currDataCHN !== '无'" class="stateLabel"
+            >分类方式：{{ styleMethodCHN }}</span
+          >
+        </div>
       </div>
       <div id="columnDragger" @mousedown="startResize"></div>
       <div id="chartArea" ref="chartArea">
@@ -75,26 +67,32 @@ export default {
     currData: {
       type: String,
       required: true,
+      default: null,
     },
     styleMethod: {
       type: String,
       required: true,
+      default: "nature",
     },
     classifyN: {
       type: Number,
       required: true,
+      default: 3,
     },
     stretchingN: {
       type: Number,
       required: true,
+      default: 2,
     },
     startColor: {
       type: String,
       required: true,
+      default: "#FFFF00",
     },
     endColor: {
       type: String,
       required: true,
+      default: "#FF0000",
     },
   },
   data() {
@@ -105,7 +103,53 @@ export default {
       currChartAreaWidth: null,
       currMapAreaWidth: null,
       year: 1970,
+      styleMethodCHN: "自然间断法",
+      currDataCHN: "无",
     };
+  },
+
+  watch: {
+    styleMethod(newValue) {
+      switch (newValue) {
+        case "nature":
+          this.styleMethodCHN = "自然间断法";
+          break;
+        case "equalSpace":
+          this.styleMethodCHN = "等间距法";
+          break;
+        case "quartiles":
+          this.styleMethodCHN = "分位数法";
+          break;
+        default:
+          console.log("unknown type");
+          break;
+      }
+    },
+    currData(newValue) {
+      switch (newValue) {
+        case "total":
+          this.currDataCHN = "总碳排";
+          break;
+        case "buildings":
+          this.currDataCHN = "建筑碳排";
+          break;
+        case "energy":
+          this.currDataCHN = "能源碳排";
+          break;
+        case "transport":
+          this.currDataCHN = "交通碳排";
+          break;
+        case "industry":
+          this.currDataCHN = "工业碳排";
+          break;
+        case "AFOLU":
+          this.currDataCHN = "其他碳排";
+          break;
+        default:
+          console.log("unknown type");
+          break;
+      }
+    },
   },
   mounted() {
     this.initChartAreaWidth = this.$refs.chartArea.offsetWidth;
@@ -248,14 +292,21 @@ import TimeLine from "./TimeLine.vue";
   background-image: url("../assets/icon_hover/2d.png");
 }
 
-/*  */
+/* 状态栏 */
 #stateArea {
   position: relative;
   height: 4%;
   background: #e0e0e0;
-  color: #3478f5;
+  color: #708ab8;
   font-family: "Arial", sans-serif;
-  font-weight: bold;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  padding: 0 10px;
+}
+
+.stateLabel {
+  margin-right: 30px;
 }
 
 /* 图表区 */
@@ -313,5 +364,4 @@ import TimeLine from "./TimeLine.vue";
   aspect-ratio: 16/9;
   background-color: #f6f6f6;
 }
-
 </style>

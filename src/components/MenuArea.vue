@@ -90,7 +90,7 @@
           </div>
           <div id="setRibbonArea">
             <div :class="selectStyleHeading">色带设置</div>
-            <canvas id="ribbon"></canvas>
+            <div id="ribbon" ref="ribbonRef"></div>
             <input
               type="color"
               id="startColor"
@@ -167,9 +167,11 @@ export default {
     },
     changeStartColor() {
       this.$emit("change-start-color", this.startColor);
+      this.$refs.ribbonRef.style.background = `linear-gradient(to right, ${this.startColor}, ${this.endColor})`;
     },
     changeEndColor() {
       this.$emit("change-end-color", this.endColor);
+      this.$refs.ribbonRef.style.background = `linear-gradient(to right, ${this.startColor}, ${this.endColor})`;
     },
   },
 };
@@ -337,15 +339,18 @@ export default {
 
 #ribbon {
   height: 22px;
-  border: 1px solid black;
+  border: 1px solid #bababa;
   width: 98%;
   border-radius: 5px;
+  background: linear-gradient(to right, #ffff00, #ff0000);
 }
+
 #startColor,
 #endColor {
   width: 20px;
   height: 20px;
   padding: 0;
+  border: 1px solid #f6f6f7;
 }
 #endColor {
   float: right;
