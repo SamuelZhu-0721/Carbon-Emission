@@ -107,9 +107,7 @@ export default {
 
 <style>
 #pieChart {
-  width: 800px;
-  height: 200px;
-  right: 270px;
-  top: 10px;
+  width: 100%;
+  height: 100%;
 }
 </style>
