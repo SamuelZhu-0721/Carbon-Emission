@@ -1,5 +1,7 @@
 <template>
-  <div id="pieChart"></div>
+  <div id="pieChartContainer">
+    <div id="pieChart"></div>
+  </div>
 </template>
 
 <script>
@@ -9,6 +11,15 @@ import axios from "axios";
 export default {
   mounted() {
     this.initChart();
+    this.initResizeObserver();
+  },
+  beforeDestroy() {
+    if (this.resizeObserver) {
+      this.resizeObserver.disconnect();
+    }
+    if (this.myChart) {
+      this.myChart.dispose(); // 清理图表实例
+    }
   },
   data() {
     return {
@@ -33,22 +44,22 @@ export default {
       this.myCurrCountry = newValue;
       this.initChart();
     },
-    year(newValue){
-      this.myYear=newValue;
+    year(newValue) {
+      this.myYear = newValue;
       this.initChart();
-    }
+    },
   },
   methods: {
     async initChart() {
       const chartDom = document.getElementById("pieChart");
-      const myChart = echarts.init(chartDom);
+      this.myChart = echarts.init(chartDom); // 保存图表实例
       const option = {
         tooltip: {
           trigger: "item",
         },
         legend: {
           orient: "vertical",
-          right: "10%", // 将负数值调小一些，使图例更向右移动
+          right: "5%", // 将负数值调小一些，使图例更向右移动
           top: "center", // 顶部对齐
         },
         series: [
@@ -56,6 +67,7 @@ export default {
             name: "CO2排放",
             type: "pie",
             radius: "50%",
+            center: ["35%", "50%"], // 调整饼图中心位置，向左移动
             data: [],
             emphasis: {
               itemStyle: {
@@ -96,16 +108,29 @@ export default {
         });
         // 更新图表数据
         option.series[0].data = data;
-        myChart.setOption(option);
+        this.myChart.setOption(option);
       } catch (error) {
         console.error("加载GeoJSON数据时出错:", error);
       }
+    },
+    initResizeObserver() {
+      const chartDom = document.getElementById("pieChartContainer");
+      this.resizeObserver = new ResizeObserver(() => {
+        if (this.myChart) {
+          this.myChart.resize();
+        }
+      });
+      this.resizeObserver.observe(chartDom);
     },
   },
 };
 </script>
 
 <style>
+#pieChartContainer {
+  width: 100%;
+  height: 100%;
+}
 #pieChart {
   width: 100%;
   height: 100%;
