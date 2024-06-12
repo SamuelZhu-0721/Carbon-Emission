@@ -89,9 +89,16 @@ export default {
 
 <style>
 #timeSeries {
+<<<<<<< HEAD
   width: 100%;
   height: 100%;
   /* right: 270px; */
   /* top: 10px; */
+=======
+  width: 800px;
+  height: 200px;
+  right: 270px;
+  top: 10px;
+>>>>>>> 941848f4e10bb376644b08632717641cb6f06e48
 }
 </style>
