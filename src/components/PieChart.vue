@@ -7,9 +7,36 @@ import * as echarts from "echarts";
 import axios from "axios";
 
 export default {
-  name: "PieChart",
   mounted() {
     this.initChart();
+  },
+  data() {
+    return {
+      myYear: 2000,
+      myCurrCountry: "ALBANIA",
+    };
+  },
+  props: {
+    year: {
+      type: Number,
+      required: true,
+      default: 1970,
+    },
+    currCountry: {
+      type: String,
+      required: true,
+      default: "ALBANIA",
+    },
+  },
+  watch: {
+    currCountry(newValue) {
+      this.myCurrCountry = newValue;
+      this.initChart();
+    },
+    year(newValue){
+      this.myYear=newValue;
+      this.initChart();
+    }
   },
   methods: {
     async initChart() {
@@ -40,7 +67,6 @@ export default {
           },
         ],
       };
-
       // 文件路径和对应的名称
       const fileUrls = [
         { url: "./data/AFOLU.geojson", name: "农牧业" },
@@ -49,29 +75,25 @@ export default {
         { url: "./data/industry.geojson", name: "工业" },
         { url: "./data/transport.geojson", name: "交通" },
       ];
-
       const data = [];
-
       try {
         // 发送所有请求
         const requests = fileUrls.map((item) => axios.get(item.url));
         const responses = await Promise.all(requests);
-
         // 处理每个响应
         responses.forEach((response, index) => {
           const geoJsonData = response.data;
           const feature = geoJsonData.features.find(
-            (f) => f.properties.NAME === "ALBANIA"
+            (f) => f.properties.NAME === this.myCurrCountry
           );
-
-          if (feature && feature.properties.F1970 !== undefined) {
+          const PropertyYear = `F${this.myYear}`;
+          if (feature && feature.properties[PropertyYear] !== undefined) {
             data.push({
               name: fileUrls[index].name,
-              value: feature.properties.F1970,
+              value: feature.properties[PropertyYear],
             });
           }
         });
-
         // 更新图表数据
         option.series[0].data = data;
         myChart.setOption(option);
@@ -85,9 +107,9 @@ export default {
 
 <style>
 #pieChart {
-  width: 700px;
-  height: 300px;
-  left: 900px;
-  top: 100px;
+  width: 800px;
+  height: 200px;
+  right: 270px;
+  top: 10px;
 }
 </style>

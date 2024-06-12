@@ -11,6 +11,7 @@
           :startColor="startColor"
           :endColor="endColor"
           :year="year"
+          @country-clicked="handleCountryClicked"
         ></CesiumViewer>
         <div id="toolsArea">
           <div id="search" class="iconButtons"></div>
@@ -37,12 +38,14 @@
         <div id="pitGraphArea">
           <span class="graphHeading">碳排放类型占比</span>
           <div class="graphArea">
-            <!-- <PieChart></PieChart> -->
+            <PieChart :currCountry="currCountry" :year="year"></PieChart>
           </div>
         </div>
         <div id="lineGraphArea">
           <span class="graphHeading">碳排放时序变化</span>
-          <div class="graphArea"></div>
+          <div class="graphArea">
+            <TimeSeries :currCountry="currCountry"></TimeSeries>
+          </div>
         </div>
         <div id="lineGraphArea2">
           <span class="graphHeading">清洁能源时序变化：(可选)</span>
@@ -62,6 +65,8 @@ export default {
   components: {
     CesiumViewer,
     TimeLine,
+    PieChart,
+    TimeSeries,
   },
   props: {
     currData: {
@@ -105,9 +110,9 @@ export default {
       year: 1970,
       styleMethodCHN: "自然间断法",
       currDataCHN: "无",
+      currCountry: null,
     };
   },
-
   watch: {
     styleMethod(newValue) {
       switch (newValue) {
@@ -193,11 +198,17 @@ export default {
       this.year = value;
       console.log("showArea-year2:" + this.year);
     },
+    handleCountryClicked(value) {
+      this.currCountry = value;
+      console.log("showarea: " + this.currCountry);
+    },
   },
 };
 
 import CesiumViewer from "./CesiumViewer.vue";
 import TimeLine from "./TimeLine.vue";
+import PieChart from "./PieChart.vue";
+import TimeSeries from "./TimeSeries.vue";
 </script>
 
 <style>

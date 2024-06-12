@@ -66,6 +66,8 @@ const props = defineProps({
   },
 });
 
+const emit = defineEmits(["country-clicked"]);
+
 watch(
   () => props.currData,
   (newValue) => {
@@ -186,6 +188,14 @@ onMounted(() => {
   myViewer.value = viewer;
   startColor.value = "#FFFF00";
   endColor.value = "#FF0000";
+
+  const handler = new Cesium.ScreenSpaceEventHandler(viewer.scene.canvas);
+  handler.setInputAction(function (e) {
+    let pick = viewer.scene.pick(e.position);
+    if (pick && pick.id) {
+      emit("country-clicked", pick.id._properties._NAME._value);
+    }
+  }, Cesium.ScreenSpaceEventType.LEFT_CLICK);
 });
 
 const addData = () => {
