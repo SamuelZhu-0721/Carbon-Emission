@@ -4,8 +4,15 @@
     <div id="showArea">
       <div id="mapArea" ref="mapArea">
         <CesiumViewer :currData="currData"></CesiumViewer>
+
         <div id="toolsArea">
-          <div id="search" class="iconButtons"></div>
+          <div
+            id="search"
+            class="iconButtons"
+            @click="toggleAutocomplete"
+          ></div>
+          <AutocompleteSearch v-if="showAutocomplete" />
+
           <div id="star" class="iconButtons"></div>
           <div id="modePicker_3d" class="iconButtons"></div>
           <div id="modePicker_2_5d" class="iconButtons"></div>
@@ -60,6 +67,7 @@ export default {
   components: {
     CesiumViewer,
     TimeLine,
+    AutocompleteSearch,
   },
   props: {
     currData: {
@@ -67,8 +75,10 @@ export default {
       required: true,
     },
   },
+
   data() {
     return {
+      showAutocomplete: false,
       initChartAreaWidth: null,
       initMapAreaWidth: null,
       resizeStartX: null,
@@ -83,6 +93,11 @@ export default {
     this.currMapAreaWidth = this.initMapAreaWidth;
   },
   methods: {
+    toggleAutocomplete() {
+      this.showAutocomplete = !this.showAutocomplete;
+      //print
+      console.log(this.showAutocomplete);
+    },
     startResize(e) {
       this.resizeStartX = e.clientX;
       window.addEventListener("mousemove", this.resize);
@@ -123,6 +138,7 @@ export default {
 
 import CesiumViewer from "./CesiumViewer.vue";
 import TimeLine from "./TimeLine.vue";
+import AutocompleteSearch from "./Autocomplete.vue";
 </script>
 
 <style>

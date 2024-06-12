@@ -2,8 +2,10 @@ from flask import Flask, request, jsonify
 from difflib import get_close_matches
 import json
 import logging
+from flask_cors import CORS
 
 app = Flask(__name__)
+CORS(app)  # 配置CORS以允许所有源
 
 # 设置日志记录
 logging.basicConfig(level=logging.DEBUG)
