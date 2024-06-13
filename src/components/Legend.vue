@@ -1,5 +1,7 @@
 <template>
-  <div v-show="currData !== null" class="legendArea">
+  <div class="legendArea">
+    <CloseOutlined id="closeLegend" @click="closeLegend"></CloseOutlined>
+
     <h4>{{ currData }}</h4>
     <div id="legend">
       <div
@@ -18,7 +20,12 @@
 </template>
 
 <script>
+import { CloseOutlined } from "@ant-design/icons-vue";
+
 export default {
+  components: {
+    CloseOutlined,
+  },
   data() {
     return {
       styleMethodCHN: "自然间断法",
@@ -38,7 +45,6 @@ export default {
     },
     addedData: {
       type: String,
-      // required: true,
       default: null,
     },
   },
@@ -80,12 +86,35 @@ export default {
         case "industry":
           this.currData = "工业碳排";
           break;
+        case "total_per":
+          this.currData = "人均总碳排";
+          break;
+        case "buildings_per":
+          this.currData = "人均建筑碳排";
+          break;
+        case "energy_per":
+          this.currData = "人均能源碳排";
+          break;
+        case "transport_per":
+          this.currData = "人均交通碳排";
+          break;
+        case "industry_per":
+          this.currData = "人均工业碳排";
+          break;
+        case "AFOLU_per":
+          this.currData = "人均其他碳排";
+          break;
         default:
           console.log("unknown type");
           this.currData = "错误碳排";
           break;
       }
       console.log(this.currData);
+    },
+  },
+  methods: {
+    closeLegend() {
+      this.$emit("change-isLegendShow");
     },
   },
 };
@@ -96,7 +125,7 @@ export default {
 .legendArea {
   z-index: 10;
   border-radius: 10px;
-  background-color: #dee6ff;
+  background-color: #e6eefd;
   position: absolute;
   width: 17%;
   max-width: 200px;
@@ -159,5 +188,11 @@ export default {
 .classifyNumber {
   margin-left: 10px;
   font-weight: 500;
+}
+#closeLegend {
+  font-size: 17px;
+  position: absolute;
+  top: 10px;
+  right: 10px;
 }
 </style>

@@ -132,6 +132,7 @@ export default {
   height: 100%;
 }
 #pieChart {
+  z-index: 1000;
   width: 100%;
   height: 100%;
 }

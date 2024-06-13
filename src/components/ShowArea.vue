@@ -11,7 +11,6 @@
           :endColor="endColor"
           :year="year"
           :_3dType="_3dType"
-          @country-clicked="handleCountryClicked"
         ></CesiumViewer>
         <div id="toolsArea">
           <div
@@ -169,6 +168,24 @@ export default {
         case "AFOLU":
           this.currDataCHN = "其他碳排";
           break;
+        case "total_per":
+          this.currDataCHN = "人均总碳排";
+          break;
+        case "buildings_per":
+          this.currDataCHN = "人均建筑碳排";
+          break;
+        case "energy_per":
+          this.currDataCHN = "人均能源碳排";
+          break;
+        case "transport_per":
+          this.currDataCHN = "人均交通碳排";
+          break;
+        case "industry_per":
+          this.currDataCHN = "人均工业碳排";
+          break;
+        case "AFOLU_per":
+          this.currDataCHN = "人均其他碳排";
+          break;
         default:
           console.log("unknown type");
           break;
@@ -222,10 +239,10 @@ export default {
       this.year = value;
       console.log("showArea-year2:" + this.year);
     },
-    handleCountryClicked(value) {
-      this.currCountry = value;
-      console.log("showarea: " + this.currCountry);
-    },
+    // handleCountryClicked(value) {
+    //   this.currCountry = value;
+    //   console.log("showarea: " + this.currCountry);
+    // },
     handleClick3d() {
       console.log(this._3dType);
       switch (this._3dType) {
@@ -348,7 +365,6 @@ import TimeSeries from "./TimeSeries.vue";
   height: 4%;
   background: #e0e0e0;
   color: #708ab8;
-  font-family: "Arial", sans-serif;
   font-weight: 500;
   display: flex;
   align-items: center;

@@ -11,6 +11,7 @@
     "start": "concurrently \"npm run dev\" \"npm run backend\""
   },
   "dependencies": {
+    "@ant-design/icons-vue": "^7.0.1",
     "ant-design-vue": "^4.2.3",
     "axios": "^1.7.2",
     "cesium": "^1.118.2",
