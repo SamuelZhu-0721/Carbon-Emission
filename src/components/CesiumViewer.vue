@@ -251,9 +251,11 @@ onMounted(() => {
     },
   });
 
-  viewer.imageryLayers.addImageryProvider(tiandiMapVec);
   viewer.imageryLayers.addImageryProvider(provider);
-  //viewer.imageryLayers.addImageryProvider(tiandiMapCva);
+
+  //viewer.imageryLayers.addImageryProvider(tiandiMapVec);
+
+  viewer.imageryLayers.addImageryProvider(tiandiMapCva);
 
   myViewer.value = viewer;
   startColor.value = "#FFFF00";

@@ -444,9 +444,10 @@ import * as Cesium from "cesium";
   border-radius: 5px;
 }
 .graphHeading {
-  margin-top: 50px;
+  margin-top: 20px;
   margin-left: 5%;
-  padding: 1px 5px 1px 5px;
+  /* margin-bottom: 20px; */
+  padding: 3px 10px 3px 10px;
   height: 20px;
   font-size: 19px;
   font-weight: 500;
@@ -468,12 +469,13 @@ import * as Cesium from "cesium";
 #pitGraphArea,
 #lineGraphArea,
 #lineGraphArea2 {
-  margin-top: 20px;
+  margin-top: 30px;
+  margin-bottom: 60px;
 }
 
 .graphArea {
-  margin-top: 5px;
-  margin-bottom: 10px;
+  margin-top: 10px;
+  margin-bottom: 5px;
   margin-left: 5%;
   width: 90%;
   aspect-ratio: 16/9;

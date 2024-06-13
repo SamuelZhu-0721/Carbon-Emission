@@ -66,7 +66,7 @@ export default {
           left: "center",
           top: "2%",
           textStyle: {
-            fontSize: fontSize * 1.5,
+            fontSize: fontSize * 1.3,
           },
         },
         tooltip: {

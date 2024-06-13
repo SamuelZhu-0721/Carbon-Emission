@@ -10,8 +10,8 @@ import axios from "axios";
 
 export default {
   mounted() {
-    this.fetchDataAndInitChart();
-    this.initResizeObserver();
+    this.initChart();
+    this.fetchData();
   },
   beforeDestroy() {
     if (this.resizeObserver) {
@@ -36,23 +36,50 @@ export default {
   watch: {
     currCountry(newValue) {
       this.myCurrCountry = newValue;
-      this.fetchDataAndInitChart();
+      this.initChart();
+      this.fetchData();
     },
-  },
-  mounted() {
-    this.fetchDataAndInitChart();
   },
   methods: {
     calculateFontSize(containerWidth) {
       return Math.max(containerWidth / 50, 12);
     },
-    async fetchDataAndInitChart() {
+
+    initChart() {
       const chartDom = document.getElementById("ForecastChart");
+      if (this.myChart) {
+        this.myChart.dispose();
+      }
       this.myChart = echarts.init(chartDom);
-      const containerWidth = chartDom.clientWidth;
+      this.initResizeObserver();
+    },
+
+    async fetchData() {
+      const response = await axios.get(
+        `http://localhost:5000/predict?country=${this.myCurrCountry}`
+      );
+      if (response.data && response.data.length > 0) {
+        const option = this.buildChartOption(response.data);
+        this.myChart.setOption(option);
+      } else {
+        console.error("No data found for the country:", this.myCurrCountry);
+      }
+    },
+
+    buildChartOption(data) {
+      const containerWidth =
+        document.getElementById("ForecastChart").clientWidth;
       this.labelFontSize = this.calculateFontSize(containerWidth);
 
-      const option = {
+      return {
+        title: {
+          text: this.myCurrCountry,
+          left: "center",
+          top: "2%",
+          textStyle: {
+            fontSize: this.labelFontSize * 1.3,
+          },
+        },
         tooltip: {
           trigger: "axis",
         },
@@ -65,12 +92,12 @@ export default {
         xAxis: {
           type: "category",
           boundaryGap: false,
-          data: [],
+          data: data.map((item) => item.year.toString()),
         },
         yAxis: {
           type: "value",
           axisLabel: {
-            formatter: (value) => `${value / 1000000}M tons`,
+            formatter: (value) => `${value} tons`,
           },
         },
         series: [
@@ -78,10 +105,9 @@ export default {
             name: "CO2 Emissions",
             type: "line",
             stack: "total",
-
-            data: [],
+            data: data.map((item) => item.value),
             lineStyle: {
-              width: 3,
+              width: 2,
               color: "rgba(97, 152, 84, 0.6)",
             },
             areaStyle: {
@@ -93,35 +119,34 @@ export default {
             itemStyle: {
               color: "rgba(97, 152, 84, 1.0)",
             },
+            markLine: {
+              symbol: ["none", "none"],
+              label: {
+                show: false,
+              },
+              lineStyle: {
+                type: "dashed",
+                color: "rgba(97, 152, 84, 0.6)",
+                width: 2.5,
+              },
+              data: [
+                {
+                  xAxis: "2020",
+                },
+              ],
+            },
           },
         ],
       };
-
-      try {
-        const response = await axios.get(
-          `http://localhost:5000/predict?country=${this.myCurrCountry}`
-        );
-        if (response.data && response.data.length > 0) {
-          option.xAxis.data = response.data.map((item) => item.year.toString());
-          option.series[0].data = response.data.map((item) => item.value);
-          this.myChart.setOption(option);
-        } else {
-          console.error("No data found for the country:", this.myCurrCountry);
-        }
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      }
     },
+
     initResizeObserver() {
+      if (this.resizeObserver) {
+        this.resizeObserver.disconnect();
+      }
       const chartDom = document.getElementById("ForecastChart");
-      this.resizeObserver = new ResizeObserver(() => {
-        if (this.myChart) {
-          const containerWidth = chartDom.clientWidth;
-          this.labelFontSize = this.calculateFontSize(containerWidth);
-          const option = this.myChart.getOption();
-          option.xAxis[0].axisLabel.fontSize = this.labelFontSize;
-          option.yAxis[0].axisLabel.fontSize = this.labelFontSize;
-          this.myChart.setOption(option);
+      this.resizeObserver = new ResizeObserver((entries) => {
+        if (this.myChart && entries[0].contentRect.width > 0) {
           this.myChart.resize();
         }
       });
