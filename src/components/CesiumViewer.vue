@@ -302,7 +302,6 @@ function hexToRgb(hex) {
     : null;
 }
 function setClassifyColor(intervals, colors) {
-  console.log(intervals);
   const startColorValue = hexToRgb(startColor.value);
   const endColorValue = hexToRgb(endColor.value);
   for (let i = 0; i < classifyN.value; i++) {

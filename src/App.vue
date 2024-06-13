@@ -5,6 +5,7 @@
     @select-classifyN-changed="handleSelectClassifyNChanged"
     @change-start-color="handleChangeStartColor"
     @change-end-color="handleChangeEndColor"
+    :signValue="signValue"
   ></MenuArea>
   <ShowArea
     :currData="currData"
@@ -12,6 +13,7 @@
     :classifyN="classifyN"
     :startColor="startColor"
     :endColor="endColor"
+    @get-collect-clicked="handleGetCollect"
   ></ShowArea>
 </template>
 
@@ -22,6 +24,10 @@ import ShowArea from "./components/ShowArea.vue";
 
 <script>
 export default {
+  components: {
+    MenuArea,
+    ShowArea,
+  },
   data() {
     return {
       year: 1970,
@@ -30,6 +36,7 @@ export default {
       classifyN: 3,
       startColor: "#FFFF00",
       endColor: "FF0000",
+      signValue: null,
     };
   },
   methods: {
@@ -63,6 +70,10 @@ export default {
     },
     handleChangeEndColor(value) {
       this.endColor = value;
+    },
+    handleGetCollect(value) {
+      this.signValue = value;
+      console.log("Collect-Name:" + this.signValue);
     },
   },
 };

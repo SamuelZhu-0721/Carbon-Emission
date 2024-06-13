@@ -138,7 +138,20 @@
       <div :class="['mainButtons', 'iconButtons']" id="starred">
         <div :class="infoRectangle">
           <h2>已收藏</h2>
-          <div id="helpContent">帮助提示内容</div>
+          <div id="starContainer">
+            <div
+              v-for="(item, index) in collections"
+              :key="index"
+              class="starContent"
+              @click="handleCollectionClick(item)"
+              @contextmenu.prevent="showContextMenu(item, index, $event)"
+            >
+              {{ item.name }}
+              <button class="delete-button" @click="deleteItem(index)">
+                删除
+              </button>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -147,7 +160,13 @@
 
 <script>
 export default {
-  name: "MenuArea",
+  props: {
+    signValue: {
+      type: [String, Number, null],
+      // required: true,
+      default: "默认名称",
+    },
+  },
   data() {
     return {
       iconContainer: "iconContainer",
@@ -157,9 +176,15 @@ export default {
       dataType1: "dataType1",
       dataType2: "dataType2",
       styleMethod: "nature",
-      classifyN: 3,
+      // classifyN: 3,
+      classifyN: "3类",
       startColor: "#FFFF00",
       endColor: "#FF0000",
+
+      collections: [],
+      newCollectionName: "",
+      contextMenuVisible: false,
+      contextMenuIndex: null,
     };
   },
   methods: {
@@ -181,9 +206,13 @@ export default {
       }
       this.$emit("select-method-changed", this.styleMethod);
     },
+    // changeClassifyN(event) {
+    //   const selcectValue = event.target.value;
+    //   this.$emit("select-classifyN-changed", selcectValue);
+    // },
     changeClassifyN(event) {
-      const selcectValue = event.target.value;
-      this.$emit("select-classifyN-changed", selcectValue);
+      this.classifyN = event.target.value;
+      this.$emit("select-classifyN-changed", this.classifyN);
     },
     changeStartColor() {
       this.$emit("change-start-color", this.startColor);
@@ -192,6 +221,42 @@ export default {
     changeEndColor() {
       this.$emit("change-end-color", this.endColor);
       this.$refs.ribbonRef.style.background = `linear-gradient(to right, ${this.startColor}, ${this.endColor})`;
+    },
+    handleCollectionClick(item) {
+      //const collectClassifyMethod=item.starClassifyM;
+      this.styleMethod = item.starClassifyM;
+      this.classifyN = item.starClassifyN;
+      this.startColor = item.starStartC;
+      this.endColor = item.starEndC;
+      this.$emit("select-method-changed", this.styleMethod);
+      this.$emit("select-classifyN-changed", this.classifyN);
+      this.$emit("change-start-color", this.startColor);
+      this.$emit("change-end-color", this.endColor);
+      this.$refs.ribbonRef.style.background = `linear-gradient(to right, ${this.startColor}, ${this.endColor})`;
+      console.log("pick collect succeed");
+    },
+    //这里时设置了一个函数可以删除收藏内容
+    deleteItem(index) {
+      this.collections.splice(index, 1);
+    },
+  },
+
+  watch: {
+    signValue(newValue) {
+      this.newCollectionName = newValue;
+      if (this.newCollectionName) {
+        const starClassifyMethod = this.styleMethod;
+        const starClassifyNumber = this.classifyN;
+        const starStartColor = this.startColor;
+        const starEndColor = this.endColor;
+        this.collections.push({
+          name: this.newCollectionName,
+          starClassifyM: starClassifyMethod,
+          starClassifyN: starClassifyNumber,
+          starStartC: starStartColor,
+          starEndC: starEndColor,
+        });
+      }
     },
   },
 };
@@ -263,8 +328,8 @@ export default {
 .infoRectangle {
   position: absolute;
   top: 0;
-  /* width: 0; */
-  width: 250px;
+  width: 0;
+  /* width: 250px; */
   height: 100%;
   background-color: #f6f6f7;
   left: 100%;
@@ -392,5 +457,30 @@ export default {
 }
 #dataHelp:hover #helpContent {
   display: block;
+}
+
+.starContent {
+  display: flex;
+  justify-content: space-between;
+  padding-left: 40px;
+  font-weight: 400;
+  font-size: 15px;
+  line-height: 30px;
+  cursor: pointer;
+}
+.starContent:hover {
+  background-color: #dbdff4;
+}
+.delete-button {
+  background-color: white;
+  border: 1px solid #e0e0e0;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 15px;
+  line-height: 30px;
+  margin-right: 5px;
+}
+.delete-button:hover {
+  color: #3478f5;
 }
 </style>

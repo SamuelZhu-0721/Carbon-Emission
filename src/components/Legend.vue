@@ -64,7 +64,6 @@ export default {
           console.log("unknown type");
           break;
       }
-      console.log(this.styleMethodCHN);
     },
     addedData(newValue) {
       switch (newValue) {

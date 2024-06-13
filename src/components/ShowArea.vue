@@ -19,7 +19,7 @@
             @click="toggleAutocomplete"
           ></div>
           <AutocompleteSearch v-if="showAutocomplete" />
-          <div id="star" class="iconButtons"></div>
+          <div id="star" class="iconButtons" @click="getCollect"></div>
           <div
             id="modePicker_3d"
             class="iconButtons"
@@ -239,10 +239,6 @@ export default {
       this.year = value;
       console.log("showArea-year2:" + this.year);
     },
-    // handleCountryClicked(value) {
-    //   this.currCountry = value;
-    //   console.log("showarea: " + this.currCountry);
-    // },
     handleClick3d() {
       console.log(this._3dType);
       switch (this._3dType) {
@@ -257,6 +253,10 @@ export default {
           break;
       }
       console.log(this._3dType);
+    },
+    getCollect() {
+      const signValue = prompt("请设置收藏名称");
+      this.$emit("get-collect-clicked", signValue);
     },
   },
 };
