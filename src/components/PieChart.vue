@@ -23,8 +23,8 @@ export default {
   },
   data() {
     return {
-      myYear: 2000,
-      myCurrCountry: "ALBANIA",
+      myYear: 1970,
+      myCurrCountry: "CHINA",
     };
   },
   props: {
@@ -36,7 +36,7 @@ export default {
     currCountry: {
       type: String,
       required: true,
-      default: "ALBANIA",
+      default: "CHINA",
     },
   },
   watch: {

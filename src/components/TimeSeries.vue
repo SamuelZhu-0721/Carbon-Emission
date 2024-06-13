@@ -23,7 +23,7 @@ export default {
   },
   data() {
     return {
-      myCurrCountry: "ALBANIA",
+      myCurrCountry: "CHINA",
       labelFontSize: 12,
     };
   },
@@ -31,7 +31,7 @@ export default {
     currCountry: {
       type: String,
       required: true,
-      default: "ALBANIA",
+      default: "CHINA",
     },
   },
   watch: {

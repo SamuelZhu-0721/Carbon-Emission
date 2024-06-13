@@ -12,7 +12,7 @@ import numpy as np
 import os
 
 app = Flask(__name__)
-CORS(app)  # 配置CORS以允许所有源
+cors = CORS(app) # 配置CORS以允许所有源
 
 # 设置日志记录
 logging.basicConfig(level=logging.DEBUG)
@@ -130,7 +130,7 @@ def predict_country_data(df, diffed):
 
     order = determine_arima_params(ts)
     model = fit_arima_model(ts, order)
-    forecast = forecast_future(model, steps=5)
+    forecast = forecast_future(model, steps=10)
 
     if diffed:
         # 如果数据被差分过，进行数据还原

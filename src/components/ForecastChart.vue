@@ -23,14 +23,14 @@ export default {
   },
   data() {
     return {
-      myCurrCountry: "ALBANIA", // 默认国家，可以通过props传入或修改
+      myCurrCountry: "CHINA", // 默认国家，可以通过props传入或修改
       labelFontSize: 12,
     };
   },
   props: {
     currCountry: {
       type: String,
-      default: "ALBANIA",
+      default: "CHINA",
     },
   },
   watch: {
@@ -38,6 +38,9 @@ export default {
       this.myCurrCountry = newValue;
       this.fetchDataAndInitChart();
     },
+  },
+  mounted() {
+    this.fetchDataAndInitChart();
   },
   methods: {
     calculateFontSize(containerWidth) {

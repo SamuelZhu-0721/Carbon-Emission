@@ -78,8 +78,9 @@ export default {
       this.signValue = {
         name: string,
         view: obj,
+        data: this.currData,
       };
-      console.log("Collect-Name:" + this.signValue.name, this.signValue.view);
+      // console.log("Collect-Name:" + this.signValue.name, this.signValue.view);
     },
     handleChangeView(view) {
       this.currView = view;
