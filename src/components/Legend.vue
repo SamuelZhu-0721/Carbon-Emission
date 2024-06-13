@@ -1,7 +1,6 @@
 <template>
   <div v-show="currData !== null" class="legendArea">
     <h4>{{ currData }}</h4>
-    <!-- <h4>分类方法:{{ styleMethodCHN }}</h4> -->
     <div id="legend">
       <div
         v-for="(item, index) in legendItems"
@@ -39,7 +38,7 @@ export default {
     },
     addedData: {
       type: String,
-      required: true,
+      // required: true,
       default: null,
     },
   },
@@ -78,9 +77,12 @@ export default {
         case "AFOLU":
           this.currData = "其他碳排";
           break;
+        case "industry":
+          this.currData = "工业碳排";
+          break;
         default:
           console.log("unknown type");
-          this.currData = "其他碳排";
+          this.currData = "错误碳排";
           break;
       }
       console.log(this.currData);
@@ -97,7 +99,7 @@ export default {
   background-color: #dee6ff;
   position: absolute;
   width: 17%;
-  /* height: 250px; */
+  max-width: 200px;
   overflow: auto;
   max-height: 250px;
   bottom: 40px;

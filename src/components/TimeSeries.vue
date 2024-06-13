@@ -1,5 +1,7 @@
 <template>
-  <div id="timeSeries"></div>
+  <div id="timeSeriesContainer">
+    <div id="timeSeries"></div>
+  </div>
 </template>
 
 <script>
@@ -9,6 +11,7 @@ import axios from "axios";
 export default {
   mounted() {
     this.initChart();
+    this.initResizeObserver();
   },
   data() {
     return {
@@ -18,27 +21,28 @@ export default {
   props: {
     currCountry: {
       type: String,
-      required: true,
-      default: "ALBANIA",
+      // required: true,
+      default: "CHINA",
     },
   },
   watch: {
     currCountry(newValue) {
       this.myCurrCountry = newValue;
-      console.log("in");
       this.initChart();
     },
   },
   methods: {
     async initChart() {
       const chartDom = document.getElementById("timeSeries");
-      const myChart = echarts.init(chartDom);
+      this.myChart = echarts.init(chartDom);
       const option = {
         tooltip: {
           trigger: "axis",
         },
         grid: {
-          left: "18%",
+          left: "20%",
+          top: "10%",
+          bottom: "10%",
         },
         xAxis: {
           type: "category",
@@ -46,10 +50,15 @@ export default {
         },
         yAxis: {
           type: "value",
+          axisLabel: {
+            formatter: function (value) {
+              return value / 1000000 + " million";
+            },
+          },
         },
         series: [
           {
-            name: "Population",
+            name: "碳排放总量",
             type: "line",
             data: [],
           },
@@ -75,7 +84,7 @@ export default {
           }
           option.xAxis.data = years;
           option.series[0].data = values;
-          myChart.setOption(option);
+          this.myChart.setOption(option);
         } else {
           console.error("No data found for Albania");
         }
@@ -83,15 +92,33 @@ export default {
         console.error("Error loading GeoJSON data:", error);
       }
     },
+    initResizeObserver() {
+      const chartDom = document.getElementById("timeSeries");
+      this.resizeObserver = new ResizeObserver(() => {
+        if (this.myChart) {
+          this.myChart.resize();
+        }
+      });
+      this.resizeObserver.observe(chartDom);
+    },
+    beforeDestroy() {
+      if (this.resizeObserver) {
+        this.resizeObserver.disconnect();
+      }
+      if (this.myChart) {
+        this.myChart.dispose(); // 清理图表实例
+      }
+    },
   },
 };
 </script>
 
 <style>
-#timeSeries {
-  width: 800px;
-  height: 200px;
-  right: 270px;
-  top: 10px;
+#timeSeriesContainer {
+  width: 100%;
+  height: 100%;
+}#timeSeries {
+  width: 100%;
+  height: 100%;
 }
 </style>

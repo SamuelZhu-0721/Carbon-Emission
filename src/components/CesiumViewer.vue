@@ -5,6 +5,7 @@
       :styleMethod="styleMethod"
       :addedData="addedData"
     ></Legend>
+    <InfoBox></InfoBox>
   </div>
 </template>
 
@@ -12,6 +13,7 @@
 import Legend from "./Legend.vue";
 import * as Cesium from "cesium";
 import { onMounted, watch, ref } from "vue";
+import InfoBox from "./InfoBox.vue";
 
 const myViewer = ref(null);
 const addedData = ref(null);
@@ -19,9 +21,10 @@ const currDataSource = ref(null);
 const startColor = ref(null);
 const endColor = ref(null);
 const styleMethod = ref("nature");
-const stretchingN = ref(2);
 const classifyN = ref(3);
 const year = ref(1970);
+
+const tableSource = ref(null);
 
 const legendItems = ref([]); // 用于存储图例项
 
@@ -31,7 +34,7 @@ const maxValueArray = ref(new Array(51).fill(Number.MIN_VALUE));
 const props = defineProps({
   currData: {
     type: String,
-    required: true,
+    // required: true,
     default: null,
   },
   styleMethod: {
@@ -39,10 +42,6 @@ const props = defineProps({
     required: true,
   },
   classifyN: {
-    type: Number,
-    required: true,
-  },
-  stretchingN: {
     type: Number,
     required: true,
   },
@@ -59,10 +58,10 @@ const props = defineProps({
     required: true,
     default: 1970,
   },
-  addedData: {
-    type: String,
+  _3dType: {
+    type: Number,
     required: true,
-    default: null,
+    default: 3,
   },
 });
 
@@ -73,6 +72,7 @@ watch(
   (newValue) => {
     if (newValue) {
       addedData.value = newValue;
+      console.log(addedData.value);
       addData();
     }
   }
@@ -89,18 +89,7 @@ watch(
     }
   }
 );
-watch(
-  () => props.stretchingN,
-  (newValue) => {
-    console.log("cesium-stretchingN:", newValue);
-    stretchingN.value = newValue;
-    if (currDataSource.value === null) {
-      alert("请选择数据！");
-    } else {
-      changeStyle();
-    }
-  }
-);
+
 watch(
   () => props.classifyN,
   (newValue) => {
@@ -148,6 +137,23 @@ watch(
     }
   }
 );
+watch(
+  () => props._3dType,
+  (newValue) => {
+    console.log(newValue);
+    switch (newValue) {
+      case 3:
+        myViewer.value.scene.morphTo3D(1.5);
+        break;
+      case 2.5:
+        myViewer.value.scene.morphToColumbusView(1.5);
+        break;
+      case 2:
+        myViewer.value.scene.morphTo2D(1.5);
+        break;
+    }
+  }
+);
 
 onMounted(() => {
   Cesium.Ion.defaultAccessToken =
@@ -161,6 +167,8 @@ onMounted(() => {
     fullscreenButton: false,
     homeButton: false,
     sceneModePicker: false,
+    // infoBox: false, // 禁用信息窗口
+    // selectionIndicator: false, // 禁用选择指示器
   });
   viewer._cesiumWidget._creditContainer.style.display = "none";
   viewer.scene.skyBox.show = false;
@@ -230,7 +238,7 @@ const addData = () => {
           }
         }
         entities[i].billboard = undefined;
-        let area = entities[i].properties.SHAPE_AREA.getValue();
+        const area = entities[i].properties.SHAPE_AREA.getValue();
         //console.log(10+Math.log(area));
         entities[i].point = new Cesium.PointGraphics({
           pixelSize: 10 + Math.log(area) * 10,
@@ -238,17 +246,17 @@ const addData = () => {
           outlineWidth: 1,
           outlineColor: Cesium.Color.fromCssColorString("#ffffff"),
         });
-
-        dataSource.clustering.clusterEvent.addEventListener(function (
-          clusteredEntities, // 注释会报错？
-          cluster
-        ) {
-          // 关闭自带的显示聚合数量的标签
-          cluster.label.show = false;
-          cluster.billboard.show = false;
-          cluster.billboard.verticalOrigin = Cesium.VerticalOrigin.BOTTOM;
-        });
       }
+
+      dataSource.clustering.clusterEvent.addEventListener(function (
+        clusteredEntities, // 注释会报错？
+        cluster
+      ) {
+        // 关闭自带的显示聚合数量的标签
+        cluster.label.show = false;
+        cluster.billboard.show = false;
+        cluster.billboard.verticalOrigin = Cesium.VerticalOrigin.BOTTOM;
+      });
       changeStyle();
     })
     .catch((e) => {
@@ -289,15 +297,13 @@ function setClassifyColor(intervals, colors) {
       0.6 +
       ")";
   }
-  // console.log(colors);
   let entities = currDataSource.value.entities.values;
   for (let i = 0; i < entities.length; i++) {
-    const value = entities[i].properties[`_F${year.value}`]._value;
+    let value = entities[i].properties[`_F${year.value}`]._value;
     let gear;
-    // console.log(intervals);
-    for (let i = 0; i < classifyN.value; i++) {
-      if (value >= intervals[i] && value <= intervals[i + 1]) {
-        gear = i;
+    for (let j = 0; j < classifyN.value; j++) {
+      if (value >= intervals[j] && value <= intervals[j + 1]) {
+        gear = j;
         break;
       }
     }
@@ -308,9 +314,6 @@ function setClassifyColor(intervals, colors) {
 
 const changeStyle = () => {
   switch (styleMethod.value) {
-    case "stretching":
-      changeStyleStretching();
-      break;
     case "nature":
       changeStyleNature();
       break;
@@ -332,35 +335,7 @@ const changeStyle = () => {
     classifyN.value
   );
 };
-const changeStyleStretching = () => {
-  console.log("in changeStyleStretching");
-  const startColorValue = hexToRgb(startColor.value);
-  const endColorValue = hexToRgb(endColor.value);
-  const minValueArrayValue = minValueArray.value;
-  const maxValueArrayValue = maxValueArray.value;
-  let entities = currDataSource.value.entities.values;
-  for (let i = 0; i < entities.length; i++) {
-    const value = entities[i].properties[`_F${year.value}`]._value;
-    let color;
-    const minValue = minValueArrayValue[year.value - 1970];
-    const maxValue = maxValueArrayValue[year.value - 1970];
-    const ratio =
-      (Math.pow(value, 1 / stretchingN.value) -
-        Math.pow(minValue, 1 / stretchingN.value)) /
-      (Math.pow(maxValue, 1 / stretchingN.value) -
-        Math.pow(minValue, 1 / stretchingN.value));
-    const r =
-      startColorValue[0] + (endColorValue[0] - startColorValue[0]) * ratio;
-    const g =
-      startColorValue[1] + (endColorValue[1] - startColorValue[1]) * ratio;
-    const b =
-      startColorValue[2] + (endColorValue[2] - startColorValue[2]) * ratio;
-    color = `rgb(${Math.round(r)}, ${Math.round(g)}, ${Math.round(b)},0.6)`;
-    entities[i].point.color = Cesium.Color.fromCssColorString(color);
-  }
-};
 const changeStyleEqualSpace = () => {
-  console.log("in changeStyleEqualSpace");
   // 直接基于currDataSource.entities.values;
   const min = minValueArray.value[year.value - 1970];
   const max = maxValueArray.value[year.value - 1970];
@@ -374,7 +349,6 @@ const changeStyleEqualSpace = () => {
   setClassifyColor(intervals, colors);
 };
 const changeStyleQuartiles = () => {
-  console.log("in changeStyleQuartiles");
   // 需先将values读入数组
   const valueArray = [];
   let entities = currDataSource.value.entities.values;
@@ -391,7 +365,6 @@ const changeStyleQuartiles = () => {
     intervals[i] = valueArray[Math.floor(i * step)];
   }
   intervals[classifyN.value] = valueArray[entities.length - 1];
-  console.log(intervals);
   setClassifyColor(intervals, colors);
 };
 const changeStyleNature = () => {
@@ -485,7 +458,6 @@ const generateLegendItems = (
   maxValue,
   steps
 ) => {
-  console.log("legend change");
   const items = [];
   const startColorValue = hexToRgb(startColor);
   const endColorValue = hexToRgb(endColor);
@@ -506,7 +478,6 @@ const generateLegendItems = (
       ).toFixed(1)}亿`,
     });
   }
-  // console.log(items);
   return items;
 };
 </script>

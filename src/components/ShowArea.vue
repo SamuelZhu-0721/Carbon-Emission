@@ -6,11 +6,11 @@
         <CesiumViewer
           :currData="currData"
           :styleMethod="styleMethod"
-          :stretchingN="stretchingN"
           :classifyN="classifyN"
           :startColor="startColor"
           :endColor="endColor"
           :year="year"
+          :_3dType="_3dType"
           @country-clicked="handleCountryClicked"
         ></CesiumViewer>
         <div id="toolsArea">
@@ -20,11 +20,25 @@
             @click="toggleAutocomplete"
           ></div>
           <AutocompleteSearch v-if="showAutocomplete" />
-
           <div id="star" class="iconButtons"></div>
-          <div id="modePicker_3d" class="iconButtons"></div>
-          <div id="modePicker_2_5d" class="iconButtons"></div>
-          <div id="modePicker_2d" class="iconButtons"></div>
+          <div
+            id="modePicker_3d"
+            class="iconButtons"
+            @click="handleClick3d"
+            v-show="_3dType == 3"
+          ></div>
+          <div
+            id="modePicker_2_5d"
+            class="iconButtons"
+            @click="handleClick3d"
+            v-show="_3dType == 2.5"
+          ></div>
+          <div
+            id="modePicker_2d"
+            class="iconButtons"
+            @click="handleClick3d"
+            v-show="_3dType == 2"
+          ></div>
         </div>
         <TimeLine ref="timeline" @change-year="handleChangeYear"></TimeLine>
         <div id="stateArea">
@@ -78,7 +92,7 @@ export default {
   props: {
     currData: {
       type: String,
-      required: true,
+      // required: true,
       default: null,
     },
     styleMethod: {
@@ -90,11 +104,6 @@ export default {
       type: Number,
       required: true,
       default: 3,
-    },
-    stretchingN: {
-      type: Number,
-      required: true,
-      default: 2,
     },
     startColor: {
       type: String,
@@ -120,6 +129,7 @@ export default {
       styleMethodCHN: "自然间断法",
       currDataCHN: "无",
       currCountry: null,
+      _3dType: 3,
     };
   },
   watch: {
@@ -216,6 +226,21 @@ export default {
       this.currCountry = value;
       console.log("showarea: " + this.currCountry);
     },
+    handleClick3d() {
+      console.log(this._3dType);
+      switch (this._3dType) {
+        case 3:
+          this._3dType = 2;
+          break;
+        case 2.5:
+          this._3dType = 3;
+          break;
+        case 2:
+          this._3dType = 2.5;
+          break;
+      }
+      console.log(this._3dType);
+    },
   },
 };
 
@@ -304,7 +329,6 @@ import TimeSeries from "./TimeSeries.vue";
   background-image: url("../assets/icon_hover/3d.png");
 }
 #modePicker_2_5d {
-  display: none;
   background-image: url("../assets/icon/2.5d.png");
 }
 #modePicker_2_5d:hover {
