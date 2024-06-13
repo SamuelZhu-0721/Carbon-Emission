@@ -21,8 +21,8 @@ export default {
   props: {
     currCountry: {
       type: String,
-      required: true,
-      default: "ALBANIA",
+      // required: true,
+      default: "CHINA",
     },
   },
   watch: {

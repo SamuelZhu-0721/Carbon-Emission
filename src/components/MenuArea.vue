@@ -47,7 +47,48 @@
           >
             其他土地利用排放
           </div>
-          <div id="perCarbon" :class="dataType1">人均碳排放</div>
+          <div
+            id="totalCarbon2"
+            :class="dataType1"
+            @click="$emit('data-clicked', 'total_per')"
+          >
+            人均碳排放
+          </div>
+          <div
+            id="buildings2"
+            :class="dataType2"
+            @click="$emit('data-clicked', 'buildings_per')"
+          >
+            建筑排放
+          </div>
+          <div
+            id="industry2"
+            :class="dataType2"
+            @click="$emit('data-clicked', 'industry_per')"
+          >
+            工业排放
+          </div>
+          <div
+            id="transport2"
+            :class="dataType2"
+            @click="$emit('data-clicked', 'transport_per')"
+          >
+            交通排放
+          </div>
+          <div
+            id="energySystem2"
+            :class="dataType2"
+            @click="$emit('data-clicked', 'energy_per')"
+          >
+            能源系统排放
+          </div>
+          <div
+            id="AFOLU2"
+            :class="dataType2"
+            @click="$emit('data-clicked', 'AFOLU_per')"
+          >
+            其他土地利用排放
+          </div>
           <div id="cleanEnergy" :class="dataType1">清洁能源</div>
           <div id="wind" :class="dataType2">风能</div>
           <div id="solar" :class="dataType2">太阳能</div>
@@ -64,25 +105,10 @@
             <div :class="selectStyleHeading">分类方法</div>
             <select id="classifyMethod" @change="changeClassifyMethod">
               <option>自然间断法</option>
-              <!-- <option>拉伸</option> -->
               <option>等间距法</option>
               <option>分位数法</option>
             </select>
-            <select
-              id="stretchingNumber"
-              v-show="styleMethod === 'stretching'"
-              @change="changeStretchingN"
-            >
-              <option>平方根</option>
-              <option>线性</option>
-              <option>立方根</option>
-              <option>六次根</option>
-            </select>
-            <select
-              id="classifyNumber"
-              v-show="styleMethod !== 'stretching'"
-              @change="changeClassifyN"
-            >
+            <select id="classifyNumber" @change="changeClassifyN">
               <option>3类</option>
               <option>4类</option>
               <option>5类</option>
@@ -129,7 +155,6 @@ export default {
       dataType1: "dataType1",
       dataType2: "dataType2",
       styleMethod: "nature",
-      stretchingN: 2,
       classifyN: 3,
       startColor: "#FFFF00",
       endColor: "#FF0000",
@@ -139,9 +164,6 @@ export default {
     changeClassifyMethod(event) {
       const selcectValue = event.target.value;
       switch (selcectValue) {
-        case "拉伸":
-          this.styleMethod = "stretching";
-          break;
         case "自然间断法":
           this.styleMethod = "nature";
           break;
@@ -156,10 +178,6 @@ export default {
           break;
       }
       this.$emit("select-method-changed", this.styleMethod);
-    },
-    changeStretchingN(event) {
-      const selcectValue = event.target.value;
-      this.$emit("select-stretchingN-changed", selcectValue);
     },
     changeClassifyN(event) {
       const selcectValue = event.target.value;
@@ -261,6 +279,7 @@ export default {
   cursor: default;
 }
 .infoRectangle > h2 {
+  margin-top: 22px;
   margin-left: 20px;
   color: #3478f5;
 }
@@ -270,6 +289,7 @@ export default {
 }
 
 .dataType1 {
+  margin-top: 20px;
   padding-left: 30px;
   font-weight: 500;
   font-size: 20px;
@@ -282,10 +302,11 @@ export default {
 
 .dataType2 {
   padding-left: 40px;
-  font-weight: 400;
+  font-weight: 500;
   font-size: 15px;
   line-height: 30px;
   height: 30px;
+  color: #474747;
 }
 .dataType2:hover {
   background-color: #dbdff4;
@@ -324,8 +345,7 @@ export default {
 }
 
 #classifyMethod,
-#classifyNumber,
-#stretchingNumber {
+#classifyNumber {
   display: block;
   left: 100px;
   margin: 10px;
