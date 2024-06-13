@@ -68,7 +68,9 @@
         </div>
         <div id="lineGraphArea2">
           <span class="graphHeading">清洁能源时序变化：(可选)</span>
-          <div class="graphArea"></div>
+          <div class="graphArea">
+            <ForecastChart :currCountry="currCountry"></ForecastChart>
+          </div>
         </div>
         <div id="predict" style="margin-bottom: 100px">
           <span class="graphHeading">碳达峰年份预测：</span>
@@ -87,6 +89,7 @@ export default {
     AutocompleteSearch,
     PieChart,
     TimeSeries,
+    ForecastChart,
   },
   props: {
     currData: {
@@ -266,6 +269,7 @@ import TimeLine from "./TimeLine.vue";
 import AutocompleteSearch from "./Autocomplete.vue";
 import PieChart from "./PieChart.vue";
 import TimeSeries from "./TimeSeries.vue";
+import ForecastChart from "./ForecastChart.vue";
 </script>
 
 <style>
