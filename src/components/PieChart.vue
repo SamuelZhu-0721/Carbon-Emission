@@ -61,8 +61,16 @@ export default {
       const fontSize = this.calculateFontSize(containerWidth);
 
       const option = {
+        title: {
+          text: `${this.myCurrCountry} ${this.myYear}`,
+          left: "center",
+          top: "2%",
+          textStyle: {
+            fontSize: fontSize * 1.5,
+          },
+        },
         tooltip: {
-          trigger: "item",
+          trigger: "itsem",
         },
         legend: {
           orient: "vertical",

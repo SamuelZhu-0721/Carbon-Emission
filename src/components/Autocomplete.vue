@@ -17,12 +17,24 @@ import axios from "axios"; // 引入axios库
 
 export default {
   name: "AutocompleteSearch",
-  setup() {
+  setup(props, { emit }) {
     const value = ref("");
     const options = ref([]);
 
-    const onSelect = (data) => {
-      console.log("onSelect", data);
+    const onSelect = (value) => {
+      // 从选项中找到与选中值匹配的项
+      const selectedOption = options.value.find(
+        (option) => option.value === value
+      );
+      if (selectedOption) {
+        console.log("onSelect", selectedOption);
+        // 发射包括名称和经纬度的完整数据
+        emit("searchAndSelected", {
+          name: selectedOption.value,
+          latitude: selectedOption.latitude,
+          longitude: selectedOption.longitude,
+        });
+      }
     };
 
     const onSearch = async (searchText) => {
@@ -39,6 +51,8 @@ export default {
         options.value = response.data.map((item) => ({
           value: item.name,
           label: `${item.name} (Lat: ${item.latitude}, Long: ${item.longitude})`,
+          latitude: item.latitude,
+          longitude: item.longitude,
         }));
       } catch (error) {
         console.error("Error fetching data: ", error);

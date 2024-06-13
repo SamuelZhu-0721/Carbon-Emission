@@ -90,6 +90,10 @@ const props = defineProps({
       },
     },
   },
+  myCurrView: {
+    type: Object,
+    required: true,
+  },
 });
 
 watch(
@@ -190,7 +194,17 @@ watch(
     });
   }
 );
-
+watch(
+  () => props.myCurrView,
+  (newValue) => {
+    console.log(newValue);
+    myViewer.value.camera.flyTo({
+      destination: newValue.destination,
+      orientation: newValue.orientation,
+      duration: 1,
+    });
+  }
+);
 onMounted(() => {
   Cesium.Ion.defaultAccessToken =
     "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiI1MWMwN2Q3YS1hNmY2LTQyNGMtOTkzYS0xZWUwNzU3ZDQ1OWIiLCJpZCI6MjA1MjI2LCJpYXQiOjE3MTE2ODM3NDB9.xFT6aZMZ8iEI7Y8bOjLGccEQO48g2GZDhIeCHPJ1A20";
@@ -225,8 +239,20 @@ onMounted(() => {
       tiandiToken,
     maximumLevel: 22,
   });
+
+  var provider = new Cesium.WebMapServiceImageryProvider({
+    url: "http://localhost:8080/geoserver/devgis/wms",
+    layers: "devgis:countries",
+    parameters: {
+      service: "WMS",
+      format: "image/png",
+      tiled: true,
+    },
+  });
+
   viewer.imageryLayers.addImageryProvider(tiandiMapVec);
-  viewer.imageryLayers.addImageryProvider(tiandiMapCva);
+  viewer.imageryLayers.addImageryProvider(provider);
+  //viewer.imageryLayers.addImageryProvider(tiandiMapCva);
 
   myViewer.value = viewer;
   startColor.value = "#FFFF00";

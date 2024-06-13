@@ -12,6 +12,7 @@
           :year="year"
           :_3dType="_3dType"
           :currView="currView"
+          :myCurrView="myCurrView"
           ref="cesiumViewerRef"
           @country-clicked="handleCountryClicked"
         ></CesiumViewer>
@@ -21,7 +22,10 @@
             class="iconButtons"
             @click="toggleAutocomplete"
           ></div>
-          <AutocompleteSearch v-if="showAutocomplete" />
+          <AutocompleteSearch
+            v-if="showAutocomplete"
+            @searchAndSelected="handleSearchAndSelected"
+          />
           <div id="star" class="iconButtons" @click="getCollect"></div>
           <div
             id="modePicker_3d"
@@ -149,6 +153,7 @@ export default {
       currDataCHN: "无",
       currCountry: null,
       _3dType: 3,
+      myCurrView: null,
     };
   },
   watch: {
@@ -282,6 +287,23 @@ export default {
       const viewInfo = this.$refs.cesiumViewerRef.getViewInfo();
       this.$emit("get-collect-clicked", [signValue, viewInfo]);
     },
+
+    handleSearchAndSelected(value) {
+      this.showAutocomplete = false;
+      this.myCurrView = {
+        destination: Cesium.Cartesian3.fromDegrees(
+          value.longitude,
+          value.latitude,
+          10000000
+        ),
+        orientation: {
+          heading: Cesium.Math.toRadians(360), // Convert degrees to radians
+          pitch: Cesium.Math.toRadians(-90), // Convert degrees to radians
+          roll: 0,
+        },
+      };
+      this.currCountry = value.name;
+    },
   },
 };
 
@@ -291,6 +313,7 @@ import AutocompleteSearch from "./Autocomplete.vue";
 import PieChart from "./PieChart.vue";
 import TimeSeries from "./TimeSeries.vue";
 import ForecastChart from "./ForecastChart.vue";
+import * as Cesium from "cesium";
 </script>
 
 <style>

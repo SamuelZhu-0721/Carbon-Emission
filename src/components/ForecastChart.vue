@@ -75,8 +75,21 @@ export default {
             name: "CO2 Emissions",
             type: "line",
             stack: "total",
-            areaStyle: {},
+
             data: [],
+            lineStyle: {
+              width: 3,
+              color: "rgba(97, 152, 84, 0.6)",
+            },
+            areaStyle: {
+              color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+                { offset: 0, color: "rgba(97, 152, 84, 1.0)" },
+                { offset: 1, color: "rgba(97, 152, 84, 0.2)" },
+              ]),
+            },
+            itemStyle: {
+              color: "rgba(97, 152, 84, 1.0)",
+            },
           },
         ],
       };

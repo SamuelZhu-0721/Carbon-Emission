@@ -51,6 +51,14 @@ export default {
       this.labelFontSize = this.calculateFontSize(containerWidth);
 
       const option = {
+        title: {
+          text: this.myCurrCountry,
+          left: "center",
+          top: "2%",
+          textStyle: {
+            fontSize: this.labelFontSize * 1.3,
+          },
+        },
         tooltip: {
           trigger: "axis",
         },

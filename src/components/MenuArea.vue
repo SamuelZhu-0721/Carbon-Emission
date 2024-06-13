@@ -4,7 +4,15 @@
       <div :class="['mainButtons', 'iconButtons']" id="pickData">
         <div :class="infoRectangle">
           <h2>选择数据</h2>
-          <div id="dataHelp" :class="['iconButtons']"></div>
+          <div id="dataHelp" :class="['iconButtons']" @click="toggleNote"></div>
+          <div id="note" v-show="showNote">
+            <div id="noteContent">
+              <p>数据选择说明</p>
+              <p>1. 点击数据按钮，选择数据类型</p>
+              <p>2. 点击数据类型，显示对应数据</p>
+              <p>3. 点击数据类型，可切换数据显示</p>
+            </div>
+          </div>
           <!-- <div id="helpContent">帮助提示内容</div> -->
           <div
             id="totalCarbon"
@@ -181,6 +189,7 @@ export default {
   },
   data() {
     return {
+      showNote: false,
       iconContainer: "iconContainer",
       infoRectangle: "infoRectangle",
       intervals: "intervals",
@@ -200,6 +209,9 @@ export default {
     };
   },
   methods: {
+    toggleNote() {
+      this.showNote = !this.showNote;
+    },
     changeClassifyMethod(event) {
       const selcectValue = event.target.value;
       switch (selcectValue) {
@@ -342,6 +354,8 @@ export default {
   top: 0;
   width: 0;
   /* width: 250px; */
+  overflow-y: scroll;
+  padding-bottom: 20px;
   height: 100%;
   background-color: #f6f6f7;
   left: 100%;
@@ -353,6 +367,7 @@ export default {
 #startColor:active .infoRectangle,
 .mainButtons:hover .infoRectangle {
   width: 250px;
+  overflow: scroll;
 }
 .infoRectangle > * {
   min-width: 250px;
@@ -494,5 +509,21 @@ export default {
 }
 .delete-button:hover {
   color: #3478f5;
+}
+#note {
+  background-color: transparent;
+  padding: 0;
+}
+
+#noteContent {
+  margin: 10px;
+  padding: 10px;
+  font-size: 15px;
+  width: 200px;
+  height: 200px;
+  box-shadow: 0px 0px 10px lightblue;
+  background-color: #f1f1f1;
+  color: rgb(150, 150, 150);
+  border-radius: 5px;
 }
 </style>
