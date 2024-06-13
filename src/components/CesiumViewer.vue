@@ -26,7 +26,7 @@ import * as Cesium from "cesium";
 import { onMounted, watch, ref } from "vue";
 import InfoBox from "./InfoBox.vue";
 import { UpCircleOutlined } from "@ant-design/icons-vue";
-
+const emit = defineEmits(["country-clicked"]);
 const myViewer = ref(null);
 const addedData = ref(null);
 const currDataSource = ref(null);
