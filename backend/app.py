@@ -73,12 +73,10 @@ def search():
         return jsonify({'error': 'No match found'}), 404
 
 
-
-
 # 预测
 
 # 从文件加载GeoJSON数据
-geojson_file_path = './data/CO2-total.geojson'
+geojson_file_path = './data/wind.geojson'
 try:
     with open(geojson_file_path, 'r', encoding='utf-8') as f:
         data = json.load(f)
@@ -92,7 +90,8 @@ def find_country_data(country_name, data):
     for feature in data["features"]:
         if feature.get("properties", {}).get("NAME", "").lower() == country_name.lower():
             country_data = [{'year': year, 'value': feature["properties"].get(f"F{year}", None)}
-                            for year in range(1970, 2011) if f"F{year}" in feature["properties"]]
+                            # for year in range(1970, 2011) if f"F{year}" in feature["properties"]]
+                            for year in range(2007, 2020) if f"F{year}" in feature["properties"]]
             break
     return pd.DataFrame(country_data)
 
@@ -131,7 +130,7 @@ def predict_country_data(df, diffed):
 
     order = determine_arima_params(ts)
     model = fit_arima_model(ts, order)
-    forecast = forecast_future(model, steps=40)
+    forecast = forecast_future(model, steps=5)
 
     if diffed:
         # 如果数据被差分过，进行数据还原
@@ -166,7 +165,34 @@ def predict():
     # 返回数据
     result = combined_df.to_dict(orient='records')  # 将DataFrame转换为字典列表
     return jsonify(result)
+    
+    
+# 碳达峰时序预测
+@app.route('/peak', methods=['GET'])
+def peak():
+        country_name = request.args.get('country')
+        if not country_name:
+            return jsonify({'error': 'Country parameter is missing'}), 400
 
+        # 提取国家的时间序列数据
+        df = find_country_data(country_name, data)
+        if df.empty:
+            return jsonify({'error': 'No data found for the specified country'}), 404
+
+        df, diffed = process_data(df)
+        forecast = predict_country_data(df, diffed)
+
+        # 将历史数据和预测数据合并
+        last_year = df['year'].iloc[-1]
+        future_years = range(last_year + 1, last_year + 1 + len(forecast))
+        forecast_df = pd.DataFrame({'year': future_years, 'value': forecast})
+
+        # 结合历史数据和预测数据
+        combined_df = pd.concat([df[['year', 'value']], forecast_df])
+        combined_df = combined_df.reset_index(drop=True)
+
+        # 返回数据
+        result = combined_df.to_dict(orient='records')
 
 if __name__ == '__main__':
     app.run(debug=True, port=5000)  # 指定 Flask 运行在 5000 端口
