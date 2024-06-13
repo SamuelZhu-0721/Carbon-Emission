@@ -1,12 +1,7 @@
 <template>
   <div id="infoBox">
     <h2>InfoBox Title</h2>
-    <a-table
-      id="showTable"
-      :dataSource="totalData"
-      :columns="columns"
-      size="middle"
-    />
+    <a-table id="f" :dataSource="totalData" :columns="columns" size="middle" />
   </div>
 </template>
 
@@ -78,7 +73,7 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 #infoBox {
   position: absolute;
   right: 10px;
@@ -100,15 +95,13 @@ export default {
 #infoBox p {
   color: #666;
 }
+:deep() .ant-table-thead > tr > th {
+  background-color: #c7dcfb; /* 更改表头背景色 */
+}
 /* #showTable {
   height: 100%;
 } */
 
 /* .ant-table-wrapper {
 } */
-
-.ant-table-tbody {
-  /* height: 100px !important; */
-  /* max-height: 100px !important; */
-}
 </style>
