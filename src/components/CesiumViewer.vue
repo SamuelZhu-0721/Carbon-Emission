@@ -236,6 +236,7 @@ onMounted(() => {
   handler.setInputAction(function (e) {
     let pick = viewer.scene.pick(e.position);
     if (pick && pick.id) {
+      emit("country-clicked", pick.id._properties._NAME._value);
       isInfoBoxShow.value = true;
       currCountry.value = pick.id._properties._NAME._value;
     }

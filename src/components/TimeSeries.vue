@@ -86,11 +86,12 @@ export default {
             data: [],
             lineStyle: {
               width: 3,
+              color: "rgba(65,105,225,0.6)",
             },
             areaStyle: {
               color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
-                { offset: 0, color: "rgba(0, 0, 190, 1.0)" },
-                { offset: 1, color: "rgba(0, 0, 190, 0.0)" },
+                { offset: 0, color: "rgba(65, 105, 225, 1.0)" },
+                { offset: 1, color: "rgba(65, 105, 225, 0.2)" },
               ]),
             },
           },
