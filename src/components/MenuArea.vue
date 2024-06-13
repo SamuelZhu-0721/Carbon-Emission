@@ -5,6 +5,7 @@
         <div :class="infoRectangle">
           <h2>选择数据</h2>
           <div id="dataHelp" :class="['iconButtons']"></div>
+          <!-- <div id="helpContent">帮助提示内容</div> -->
           <div
             id="totalCarbon"
             :class="dataType1"
@@ -137,6 +138,7 @@
       <div :class="['mainButtons', 'iconButtons']" id="starred">
         <div :class="infoRectangle">
           <h2>已收藏</h2>
+          <div id="helpContent">帮助提示内容</div>
         </div>
       </div>
     </div>
@@ -261,7 +263,8 @@ export default {
 .infoRectangle {
   position: absolute;
   top: 0;
-  width: 0;
+  /* width: 0; */
+  width: 250px;
   height: 100%;
   background-color: #f6f6f7;
   left: 100%;
@@ -374,5 +377,20 @@ export default {
 }
 #endColor {
   float: right;
+}
+
+#helpContent {
+  background-color: #3478f5;
+  display: block;
+  min-width: auto;
+  margin-left: 10%;
+  width: 80%;
+  height: 100px;
+  /* border: ; */
+  font-size: 10px;
+  box-shadow: 1px 2px 5px #00e5ff;
+}
+#dataHelp:hover #helpContent {
+  display: block;
 }
 </style>

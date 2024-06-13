@@ -352,7 +352,6 @@ import TimeSeries from "./TimeSeries.vue";
   background-image: url("../assets/icon_hover/2.5d.png");
 }
 #modePicker_2d {
-  display: none;
   background-image: url("../assets/icon/2d.png");
 }
 #modePicker_2d:hover {

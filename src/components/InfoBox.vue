@@ -177,9 +177,9 @@ export default {
 #infoBox p {
   color: #666;
 }
-:deep() .ant-table-thead > tr > th {
-  background-color: #c7dcfb; /* 更改表头背景色 */
-}
+/* :deep() .ant-table-thead > tr > th {
+  background-color: #c7dcfb;
+} */
 /* #showTable {
   height: 100%;
 } */
