@@ -5,6 +5,7 @@
     @select-classifyN-changed="handleSelectClassifyNChanged"
     @change-start-color="handleChangeStartColor"
     @change-end-color="handleChangeEndColor"
+    @change-view="handleChangeView"
     :signValue="signValue"
   ></MenuArea>
   <ShowArea
@@ -13,6 +14,7 @@
     :classifyN="classifyN"
     :startColor="startColor"
     :endColor="endColor"
+    :currView="currView"
     @get-collect-clicked="handleGetCollect"
   ></ShowArea>
 </template>
@@ -37,6 +39,7 @@ export default {
       startColor: "#FFFF00",
       endColor: "FF0000",
       signValue: null,
+      currView: null,
     };
   },
   methods: {
@@ -71,9 +74,15 @@ export default {
     handleChangeEndColor(value) {
       this.endColor = value;
     },
-    handleGetCollect(value) {
-      this.signValue = value;
-      console.log("Collect-Name:" + this.signValue);
+    handleGetCollect([string, obj]) {
+      this.signValue = {
+        name: string,
+        view: obj,
+      };
+      console.log("Collect-Name:" + this.signValue.name, this.signValue.view);
+    },
+    handleChangeView(view) {
+      this.currView = view;
     },
   },
 };

@@ -162,9 +162,21 @@
 export default {
   props: {
     signValue: {
-      type: [String, Number, null],
-      // required: true,
-      default: "默认名称",
+      default: {
+        name: "收藏",
+        view: {
+          destination: {
+            x: -3763615.263278671,
+            y: 14328046.39785114,
+            z: 11968303.428517662,
+          },
+          orientation: {
+            heading: 6.283185307179586,
+            pitch: -1.5690960444421616,
+            roll: 0,
+          },
+        },
+      },
     },
   },
   data() {
@@ -232,6 +244,7 @@ export default {
       this.$emit("select-classifyN-changed", this.classifyN);
       this.$emit("change-start-color", this.startColor);
       this.$emit("change-end-color", this.endColor);
+      this.$emit("change-view", item.view);
       this.$refs.ribbonRef.style.background = `linear-gradient(to right, ${this.startColor}, ${this.endColor})`;
       console.log("pick collect succeed");
     },
@@ -243,20 +256,19 @@ export default {
 
   watch: {
     signValue(newValue) {
-      this.newCollectionName = newValue;
-      if (this.newCollectionName) {
-        const starClassifyMethod = this.styleMethod;
-        const starClassifyNumber = this.classifyN;
-        const starStartColor = this.startColor;
-        const starEndColor = this.endColor;
-        this.collections.push({
-          name: this.newCollectionName,
-          starClassifyM: starClassifyMethod,
-          starClassifyN: starClassifyNumber,
-          starStartC: starStartColor,
-          starEndC: starEndColor,
-        });
-      }
+      this.newCollectionName = newValue.name;
+      const starClassifyMethod = this.styleMethod;
+      const starClassifyNumber = this.classifyN;
+      const starStartColor = this.startColor;
+      const starEndColor = this.endColor;
+      this.collections.push({
+        name: this.newCollectionName,
+        starClassifyM: starClassifyMethod,
+        starClassifyN: starClassifyNumber,
+        starStartC: starStartColor,
+        starEndC: starEndColor,
+        view: newValue.view,
+      });
     },
   },
 };

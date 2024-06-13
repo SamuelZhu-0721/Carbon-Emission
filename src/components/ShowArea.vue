@@ -11,6 +11,8 @@
           :endColor="endColor"
           :year="year"
           :_3dType="_3dType"
+          :currView="currView"
+          ref="cesiumViewerRef"
         ></CesiumViewer>
         <div id="toolsArea">
           <div
@@ -117,6 +119,20 @@ export default {
       required: true,
       default: "#FF0000",
     },
+    currView: {
+      default: {
+        destination: {
+          x: -3763615.263278671,
+          y: 14328046.39785114,
+          z: 11968303.428517662,
+        },
+        orientation: {
+          heading: 6.283185307179586,
+          pitch: -1.5690960444421616,
+          roll: 0,
+        },
+      },
+    },
   },
 
   data() {
@@ -204,7 +220,6 @@ export default {
   methods: {
     toggleAutocomplete() {
       this.showAutocomplete = !this.showAutocomplete;
-      //print
       console.log(this.showAutocomplete);
     },
     startResize(e) {
@@ -259,7 +274,8 @@ export default {
     },
     getCollect() {
       const signValue = prompt("请设置收藏名称");
-      this.$emit("get-collect-clicked", signValue);
+      const viewInfo = this.$refs.cesiumViewerRef.getViewInfo();
+      this.$emit("get-collect-clicked", [signValue, viewInfo]);
     },
   },
 };
