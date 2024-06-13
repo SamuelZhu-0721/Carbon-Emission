@@ -11,6 +11,7 @@
           :endColor="endColor"
           :year="year"
           :_3dType="_3dType"
+          @country-clicked="handleCountryClicked"
         ></CesiumViewer>
         <div id="toolsArea">
           <div
@@ -130,7 +131,7 @@ export default {
       year: 1970,
       styleMethodCHN: "自然间断法",
       currDataCHN: "无",
-      currCountry: null,
+      currCountry: "",
       _3dType: 3,
     };
   },
@@ -241,6 +242,10 @@ export default {
     handleChangeYear(value) {
       this.year = value;
       console.log("showArea-year2:" + this.year);
+    },
+    handleCountryClicked(value) {
+      this.currCountry = value;
+      console.log("showarea: " + this.currCountry);
     },
     handleClick3d() {
       console.log(this._3dType);

@@ -27,6 +27,18 @@ export default {
       labelFontSize: 12,
     };
   },
+  props: {
+    currCountry: {
+      type: String,
+      default: "ALBANIA",
+    },
+  },
+  watch: {
+    currCountry(newValue) {
+      this.myCurrCountry = newValue;
+      this.fetchDataAndInitChart();
+    },
+  },
   methods: {
     calculateFontSize(containerWidth) {
       return Math.max(containerWidth / 50, 12);
