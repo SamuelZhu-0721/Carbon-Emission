@@ -13,16 +13,25 @@ export default {
     this.initChart();
     this.initResizeObserver();
   },
+  beforeDestroy() {
+    if (this.resizeObserver) {
+      this.resizeObserver.disconnect();
+    }
+    if (this.myChart) {
+      this.myChart.dispose();
+    }
+  },
   data() {
     return {
       myCurrCountry: "ALBANIA",
+      labelFontSize: 12,
     };
   },
   props: {
     currCountry: {
       type: String,
-      // required: true,
-      default: "CHINA",
+      required: true,
+      default: "ALBANIA",
     },
   },
   watch: {
@@ -32,21 +41,34 @@ export default {
     },
   },
   methods: {
+    calculateFontSize(containerWidth) {
+      return Math.max(containerWidth / 50, 12);
+    },
     async initChart() {
       const chartDom = document.getElementById("timeSeries");
       this.myChart = echarts.init(chartDom);
+      const containerWidth = chartDom.clientWidth;
+      this.labelFontSize = this.calculateFontSize(containerWidth);
+
       const option = {
         tooltip: {
           trigger: "axis",
         },
         grid: {
-          left: "20%",
+          left: "24%",
           top: "10%",
           bottom: "10%",
         },
         xAxis: {
           type: "category",
           data: [],
+          axisLabel: {
+            fontSize: this.labelFontSize,
+          },
+          boundaryGap: false,
+          axisTick: {
+            inside: true,
+          },
         },
         yAxis: {
           type: "value",
@@ -54,6 +76,7 @@ export default {
             formatter: function (value) {
               return value / 1000000 + " million";
             },
+            fontSize: this.labelFontSize,
           },
         },
         series: [
@@ -61,6 +84,15 @@ export default {
             name: "碳排放总量",
             type: "line",
             data: [],
+            lineStyle: {
+              width: 3,
+            },
+            areaStyle: {
+              color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+                { offset: 0, color: "rgba(0, 0, 190, 1.0)" },
+                { offset: 1, color: "rgba(0, 0, 190, 0.0)" },
+              ]),
+            },
           },
         ],
       };
@@ -96,18 +128,16 @@ export default {
       const chartDom = document.getElementById("timeSeries");
       this.resizeObserver = new ResizeObserver(() => {
         if (this.myChart) {
+          const containerWidth = chartDom.clientWidth;
+          this.labelFontSize = this.calculateFontSize(containerWidth);
+          const option = this.myChart.getOption();
+          option.xAxis[0].axisLabel.fontSize = this.labelFontSize;
+          option.yAxis[0].axisLabel.fontSize = this.labelFontSize;
+          this.myChart.setOption(option);
           this.myChart.resize();
         }
       });
       this.resizeObserver.observe(chartDom);
-    },
-    beforeDestroy() {
-      if (this.resizeObserver) {
-        this.resizeObserver.disconnect();
-      }
-      if (this.myChart) {
-        this.myChart.dispose(); // 清理图表实例
-      }
     },
   },
 };
@@ -117,7 +147,8 @@ export default {
 #timeSeriesContainer {
   width: 100%;
   height: 100%;
-}#timeSeries {
+}
+#timeSeries {
   width: 100%;
   height: 100%;
 }

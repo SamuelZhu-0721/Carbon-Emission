@@ -35,8 +35,8 @@ export default {
     },
     currCountry: {
       type: String,
-      // required: true,
-      default: "CHINA",
+      required: true,
+      default: "ALBANIA",
     },
   },
   watch: {
@@ -50,25 +50,38 @@ export default {
     },
   },
   methods: {
+    calculateFontSize(containerWidth) {
+      // 基于容器宽度计算字体大小，可以根据需要调整计算逻辑
+      return Math.max(containerWidth / 30, 12); // 字体大小在12到24之间
+    },
     async initChart() {
       const chartDom = document.getElementById("pieChart");
       this.myChart = echarts.init(chartDom); // 保存图表实例
+      const containerWidth = chartDom.clientWidth;
+      const fontSize = this.calculateFontSize(containerWidth);
+
       const option = {
         tooltip: {
           trigger: "item",
         },
         legend: {
           orient: "vertical",
-          right: "5%", // 将负数值调小一些，使图例更向右移动
-          top: "center", // 顶部对齐
+          right: "1%",
+          top: "center",
+          textStyle: {
+            fontSize: fontSize,
+          },
         },
         series: [
           {
             name: "CO2排放",
             type: "pie",
             radius: "50%",
-            center: ["35%", "50%"], // 调整饼图中心位置，向左移动
+            center: ["35%", "50%"],
             data: [],
+            label: {
+              fontSize: fontSize,
+            },
             emphasis: {
               itemStyle: {
                 shadowBlur: 10,
@@ -79,6 +92,7 @@ export default {
           },
         ],
       };
+
       // 文件路径和对应的名称
       const fileUrls = [
         { url: "./data/AFOLU.geojson", name: "农牧业" },
@@ -87,11 +101,13 @@ export default {
         { url: "./data/industry.geojson", name: "工业" },
         { url: "./data/transport.geojson", name: "交通" },
       ];
+
       const data = [];
       try {
         // 发送所有请求
         const requests = fileUrls.map((item) => axios.get(item.url));
         const responses = await Promise.all(requests);
+
         // 处理每个响应
         responses.forEach((response, index) => {
           const geoJsonData = response.data;
@@ -106,6 +122,7 @@ export default {
             });
           }
         });
+
         // 更新图表数据
         option.series[0].data = data;
         this.myChart.setOption(option);
@@ -117,6 +134,14 @@ export default {
       const chartDom = document.getElementById("pieChartContainer");
       this.resizeObserver = new ResizeObserver(() => {
         if (this.myChart) {
+          const containerWidth = chartDom.clientWidth;
+          const fontSize = this.calculateFontSize(containerWidth);
+
+          // 更新图表选项中的字体大小
+          const option = this.myChart.getOption();
+          option.legend[0].textStyle.fontSize = fontSize;
+          option.series[0].label.fontSize = fontSize;
+          this.myChart.setOption(option);
           this.myChart.resize();
         }
       });
@@ -132,7 +157,6 @@ export default {
   height: 100%;
 }
 #pieChart {
-  z-index: 1000;
   width: 100%;
   height: 100%;
 }
