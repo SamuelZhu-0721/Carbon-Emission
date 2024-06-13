@@ -5,7 +5,6 @@
         <div :class="infoRectangle">
           <h2>选择数据</h2>
           <div id="dataHelp" :class="['iconButtons']"></div>
-          <!-- <div id="helpContent">帮助提示内容</div> -->
           <div
             id="totalCarbon"
             :class="dataType1"
@@ -240,6 +239,7 @@ export default {
       this.classifyN = item.starClassifyN;
       this.startColor = item.starStartC;
       this.endColor = item.starEndC;
+      this.$emit("data-clicked", item.data);
       this.$emit("select-method-changed", this.styleMethod);
       this.$emit("select-classifyN-changed", this.classifyN);
       this.$emit("change-start-color", this.startColor);
@@ -256,18 +256,18 @@ export default {
 
   watch: {
     signValue(newValue) {
-      this.newCollectionName = newValue.name;
       const starClassifyMethod = this.styleMethod;
       const starClassifyNumber = this.classifyN;
       const starStartColor = this.startColor;
       const starEndColor = this.endColor;
       this.collections.push({
-        name: this.newCollectionName,
+        name: newValue.name,
         starClassifyM: starClassifyMethod,
         starClassifyN: starClassifyNumber,
         starStartC: starStartColor,
         starEndC: starEndColor,
         view: newValue.view,
+        data: newValue.data,
       });
     },
   },
