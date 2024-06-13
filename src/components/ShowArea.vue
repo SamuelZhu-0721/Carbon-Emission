@@ -11,7 +11,6 @@
           :endColor="endColor"
           :year="year"
           :_3dType="_3dType"
-          @country-clicked="handleCountryClicked"
         ></CesiumViewer>
         <div id="toolsArea">
           <div
@@ -222,10 +221,10 @@ export default {
       this.year = value;
       console.log("showArea-year2:" + this.year);
     },
-    handleCountryClicked(value) {
-      this.currCountry = value;
-      console.log("showarea: " + this.currCountry);
-    },
+    // handleCountryClicked(value) {
+    //   this.currCountry = value;
+    //   console.log("showarea: " + this.currCountry);
+    // },
     handleClick3d() {
       console.log(this._3dType);
       switch (this._3dType) {
@@ -348,7 +347,6 @@ import TimeSeries from "./TimeSeries.vue";
   height: 4%;
   background: #e0e0e0;
   color: #708ab8;
-  font-family: "Arial", sans-serif;
   font-weight: 500;
   display: flex;
   align-items: center;

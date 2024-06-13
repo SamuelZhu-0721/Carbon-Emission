@@ -1,11 +1,29 @@
 <template>
   <div id="cesiumContainer">
     <Legend
+      v-show="isLegendShow"
       :legendItems="legendItems"
       :styleMethod="styleMethod"
       :addedData="addedData"
+      @change-isLegendShow="handChangeIsLegendShow"
     ></Legend>
-    <InfoBox></InfoBox>
+    <InfoBox
+      v-show="isInfoBoxShow"
+      :currCountry
+      @change-isInfoBoxShow="handleChangeIsInfoBoxShow"
+    ></InfoBox>
+    <!-- <div
+      v-show="!isLegendShow && addedData !== null"
+      id="showLegend"
+      @click="showLegend"
+    >
+      显示图例
+    </div> -->
+    <UpCircleOutlined
+      v-show="!isLegendShow && addedData !== null"
+      id="showLegend"
+      @click="showLegend"
+    ></UpCircleOutlined>
   </div>
 </template>
 
@@ -14,6 +32,7 @@ import Legend from "./Legend.vue";
 import * as Cesium from "cesium";
 import { onMounted, watch, ref } from "vue";
 import InfoBox from "./InfoBox.vue";
+import { UpCircleOutlined } from "@ant-design/icons-vue";
 
 const myViewer = ref(null);
 const addedData = ref(null);
@@ -23,8 +42,9 @@ const endColor = ref(null);
 const styleMethod = ref("nature");
 const classifyN = ref(3);
 const year = ref(1970);
-
-const tableSource = ref(null);
+const currCountry = ref("null");
+const isLegendShow = ref(false);
+const isInfoBoxShow = ref(false);
 
 const legendItems = ref([]); // 用于存储图例项
 
@@ -73,6 +93,7 @@ watch(
     if (newValue) {
       addedData.value = newValue;
       console.log(addedData.value);
+      isLegendShow.value = true;
       addData();
     }
   }
@@ -89,7 +110,6 @@ watch(
     }
   }
 );
-
 watch(
   () => props.classifyN,
   (newValue) => {
@@ -167,7 +187,7 @@ onMounted(() => {
     fullscreenButton: false,
     homeButton: false,
     sceneModePicker: false,
-    // infoBox: false, // 禁用信息窗口
+    infoBox: false, // 禁用信息窗口
     // selectionIndicator: false, // 禁用选择指示器
   });
   viewer._cesiumWidget._creditContainer.style.display = "none";
@@ -201,7 +221,9 @@ onMounted(() => {
   handler.setInputAction(function (e) {
     let pick = viewer.scene.pick(e.position);
     if (pick && pick.id) {
-      emit("country-clicked", pick.id._properties._NAME._value);
+      // emit("country-clicked", pick.id._properties._NAME._value);
+      isInfoBoxShow.value = true;
+      currCountry.value = pick.id._properties._NAME._value;
     }
   }, Cesium.ScreenSpaceEventType.LEFT_CLICK);
 });
@@ -480,6 +502,17 @@ const generateLegendItems = (
   }
   return items;
 };
+
+const handleChangeIsInfoBoxShow = () => {
+  isInfoBoxShow.value = !isInfoBoxShow.value;
+};
+const handChangeIsLegendShow = () => {
+  isLegendShow.value = !isLegendShow.value;
+  console.log("handle");
+};
+const showLegend = () => {
+  isLegendShow.value = !isLegendShow.value;
+};
 </script>
 
 <style>
@@ -489,5 +522,12 @@ const generateLegendItems = (
   display: grid;
   grid-template-columns: 60px 1fr;
   align-items: flex-start;
+}
+#showLegend {
+  position: absolute;
+  z-index: 100;
+  font-size: 30px;
+  right: 20px;
+  bottom: 20px;
 }
 </style>

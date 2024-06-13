@@ -1,5 +1,7 @@
 <template>
-  <div v-show="currData !== null" class="legendArea">
+  <div class="legendArea">
+    <CloseOutlined id="closeLegend" @click="closeLegend"></CloseOutlined>
+
     <h4>{{ currData }}</h4>
     <div id="legend">
       <div
@@ -18,7 +20,12 @@
 </template>
 
 <script>
+import { CloseOutlined } from "@ant-design/icons-vue";
+
 export default {
+  components: {
+    CloseOutlined,
+  },
   data() {
     return {
       styleMethodCHN: "自然间断法",
@@ -88,6 +95,11 @@ export default {
       console.log(this.currData);
     },
   },
+  methods: {
+    closeLegend() {
+      this.$emit("change-isLegendShow");
+    },
+  },
 };
 </script>
 
@@ -96,7 +108,7 @@ export default {
 .legendArea {
   z-index: 10;
   border-radius: 10px;
-  background-color: #dee6ff;
+  background-color: #f9fbff;
   position: absolute;
   width: 17%;
   max-width: 200px;
@@ -159,5 +171,11 @@ export default {
 .classifyNumber {
   margin-left: 10px;
   font-weight: 500;
+}
+#closeLegend {
+  font-size: 17px;
+  position: absolute;
+  top: 10px;
+  right: 10px;
 }
 </style>

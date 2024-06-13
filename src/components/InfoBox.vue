@@ -1,21 +1,27 @@
 <template>
   <div id="infoBox">
-    <h2>InfoBox Title</h2>
+    <CloseOutlined id="closeInfoBox" @click="closeInfoBox"></CloseOutlined>
+    <h2>{{ this.myCurrCountry }}</h2>
     <a-table
       id="showTable"
       :dataSource="totalData"
       :columns="columns"
-      size="middle"
+      size="small"
     />
   </div>
 </template>
 
 <script>
+import { CloseOutlined } from "@ant-design/icons-vue";
+
 export default {
+  components: {
+    CloseOutlined,
+  },
   data() {
     return {
       totalData: [],
-      currCountry: "CHINA",
+      myCurrCountry: "CHINA",
       columns: [
         {
           title: "年份",
@@ -33,7 +39,20 @@ export default {
           key: "avg",
         },
       ],
+      jsonSource: null,
     };
+  },
+  props: {
+    currCountry: {
+      type: String,
+      default: null,
+    },
+  },
+  watch: {
+    currCountry(newValue) {
+      this.myCurrCountry = newValue;
+      this.loadList();
+    },
   },
   mounted() {
     this.loadGeoJson();
@@ -43,36 +62,39 @@ export default {
       fetch("/data/total.geojson")
         .then((response) => response.json())
         .then((data) => {
-          console.log(data);
-          const temp = data.features;
-          console.log(temp);
-          let thisCountryProperties = null;
-          for (let i = 0; i < temp.length; i++) {
-            if (temp[i].properties.NAME === this.currCountry) {
-              thisCountryProperties = temp[i].properties;
-              break;
-            }
-          }
-          if (!thisCountryProperties) {
-            alert("该国数据缺失！");
-          } else {
-            console.log(thisCountryProperties);
-            for (let i = 1970; i <= 2020; i++) {
-              const newData = {
-                key: i - 1969,
-                year: i,
-                total: Number(thisCountryProperties[`F${i}`]).toFixed(2),
-                avg: Number(thisCountryProperties[`F${i}`]).toFixed(2),
-              };
-              console.log(newData);
-              this.totalData.push(newData);
-            }
-            console.log(this.totalData);
-          }
+          this.jsonSource = data;
         })
         .catch((error) =>
           console.error("Error loading the geojson data: ", error)
         );
+    },
+    loadList() {
+      const temp = this.jsonSource.features;
+      let thisCountryProperties = null;
+      for (let i = 0; i < temp.length; i++) {
+        if (temp[i].properties.NAME === this.myCurrCountry) {
+          thisCountryProperties = temp[i].properties;
+          break;
+        }
+      }
+      if (!thisCountryProperties) {
+        alert("该国数据缺失！");
+      } else {
+        // console.log(thisCountryProperties);
+        this.totalData = [];
+        for (let i = 1970; i <= 2020; i++) {
+          const newData = {
+            key: i - 1969,
+            year: i,
+            total: Number(thisCountryProperties[`F${i}`]).toFixed(2),
+            avg: Number(thisCountryProperties[`F${i}`]).toFixed(2),
+          };
+          this.totalData.push(newData);
+        }
+      }
+    },
+    closeInfoBox() {
+      this.$emit("change-isInfoBoxShow");
     },
   },
 };
@@ -88,7 +110,7 @@ export default {
   /* max-height: 80%; */
   text-align: center;
   font-family: Arial, sans-serif;
-  background-color: #ffffff;
+  background-color: #ffffffa4;
   padding: 20px;
   border-radius: 5px;
   box-shadow: 0 2px 5px #0000001a;
@@ -97,18 +119,10 @@ export default {
   margin-top: 0;
   color: #333;
 }
-#infoBox p {
-  color: #666;
-}
-/* #showTable {
-  height: 100%;
-} */
-
-/* .ant-table-wrapper {
-} */
-
-.ant-table-tbody {
-  /* height: 100px !important; */
-  /* max-height: 100px !important; */
+#closeInfoBox {
+  font-size: 20px;
+  position: absolute;
+  top: 15px;
+  right: 15px;
 }
 </style>
