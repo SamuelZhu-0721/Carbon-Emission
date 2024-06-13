@@ -136,8 +136,6 @@ export default {
         if (this.myChart) {
           const containerWidth = chartDom.clientWidth;
           const fontSize = this.calculateFontSize(containerWidth);
-
-          // 更新图表选项中的字体大小
           const option = this.myChart.getOption();
           option.legend[0].textStyle.fontSize = fontSize;
           option.series[0].label.fontSize = fontSize;

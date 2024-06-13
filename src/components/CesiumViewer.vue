@@ -76,9 +76,21 @@ const props = defineProps({
     required: true,
     default: 3,
   },
+  currView: {
+    default: {
+      destination: {
+        x: -3763615.263278671,
+        y: 14328046.39785114,
+        z: 11968303.428517662,
+      },
+      orientation: {
+        heading: 6.283185307179586,
+        pitch: -1.5690960444421616,
+        roll: 0,
+      },
+    },
+  },
 });
-
-const emit = defineEmits(["country-clicked"]);
 
 watch(
   () => props.currData,
@@ -167,6 +179,17 @@ watch(
     }
   }
 );
+watch(
+  () => props.currView,
+  (newValue) => {
+    console.log(newValue);
+    myViewer.value.camera.flyTo({
+      destination: newValue.destination,
+      orientation: newValue.orientation,
+      duration: 1,
+    });
+  }
+);
 
 onMounted(() => {
   Cesium.Ion.defaultAccessToken =
@@ -232,6 +255,8 @@ onMounted(() => {
     },
     duration: 1,
   });
+
+  // console.log(getViewInfo());
 });
 
 const addData = () => {
@@ -516,6 +541,25 @@ const handChangeIsLegendShow = () => {
 const showLegend = () => {
   isLegendShow.value = !isLegendShow.value;
 };
+const getViewInfo = () => {
+  const camera = myViewer.value.camera;
+  const viewInfo = {
+    destination: {
+      x: camera.position.x,
+      y: camera.position.y,
+      z: camera.position.z,
+    },
+    orientation: {
+      heading: camera.heading,
+      pitch: camera.pitch,
+      roll: camera.roll,
+    },
+  };
+  return viewInfo;
+};
+defineExpose({
+  getViewInfo,
+});
 </script>
 
 <style>
