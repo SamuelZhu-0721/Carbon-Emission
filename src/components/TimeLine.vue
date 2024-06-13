@@ -95,7 +95,8 @@ export default {
   position: absolute;
   top: 85%;
   left: 20%;
-  font-size: 25px;
+  font-size: 45px;
+  font-weight: 700;
   font-family: "Trebuchet MS", "Lucida Sans Unicode", "Lucida Grande",
     "Lucida Sans", Arial, sans-serif;
   color: #ea354400;

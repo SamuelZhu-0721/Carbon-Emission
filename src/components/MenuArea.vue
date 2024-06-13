@@ -4,7 +4,14 @@
       <div :class="['mainButtons', 'iconButtons']" id="pickData">
         <div :class="infoRectangle">
           <h2>选择数据</h2>
-          <div id="dataHelp" :class="['iconButtons']"></div>
+          <div id="dataHelp" :class="['iconButtons']" @click="toggleNote"></div>
+          <div id="note" v-show="showNote">
+            <div id="noteContent">
+              <p>1. 点击数据按钮，选择数据类型</p>
+              <p>2. 点击数据类型，显示对应数据</p>
+              <p>3. 点击数据类型，可切换数据显示</p>
+            </div>
+          </div>
           <div
             id="totalCarbon"
             :class="dataType1"
@@ -89,11 +96,11 @@
           >
             其他土地利用排放
           </div>
-          <div id="cleanEnergy" :class="dataType1">清洁能源</div>
+          <!-- <div id="cleanEnergy" :class="dataType1">清洁能源</div>
           <div id="wind" :class="dataType2">风能</div>
           <div id="solar" :class="dataType2">太阳能</div>
           <div id="nuclear" :class="dataType2">核能</div>
-          <div id="hydro" :class="dataType2">水电</div>
+          <div id="hydro" :class="dataType2">水电</div> -->
         </div>
       </div>
     </div>
@@ -145,10 +152,11 @@
               @click="handleCollectionClick(item)"
               @contextmenu.prevent="showContextMenu(item, index, $event)"
             >
-              {{ item.name }}
-              <button class="delete-button" @click="deleteItem(index)">
-                删除
-              </button>
+              <div class="starredLable">{{ item.name }}</div>
+              <CloseSquareOutlined
+                class="deleteStarred"
+                @click="deleteItem(index)"
+              ></CloseSquareOutlined>
             </div>
           </div>
         </div>
@@ -158,6 +166,8 @@
 </template>
 
 <script>
+import { CloseSquareOutlined } from "@ant-design/icons-vue";
+
 export default {
   props: {
     signValue: {
@@ -178,6 +188,9 @@ export default {
       },
     },
   },
+  components: {
+    CloseSquareOutlined,
+  },
   data() {
     return {
       iconContainer: "iconContainer",
@@ -196,6 +209,7 @@ export default {
       newCollectionName: "",
       contextMenuVisible: false,
       contextMenuIndex: null,
+      showNote: false,
     };
   },
   methods: {
@@ -252,16 +266,22 @@ export default {
     deleteItem(index) {
       this.collections.splice(index, 1);
     },
+    toggleNote() {
+      this.showNote = !this.showNote;
+    },
   },
-
   watch: {
     signValue(newValue) {
+      let myName = "收藏";
+      if (newValue.name) {
+        myName = newValue.name;
+      }
       const starClassifyMethod = this.styleMethod;
       const starClassifyNumber = this.classifyN;
       const starStartColor = this.startColor;
       const starEndColor = this.endColor;
       this.collections.push({
-        name: newValue.name,
+        name: myName,
         starClassifyM: starClassifyMethod,
         starClassifyN: starClassifyNumber,
         starStartC: starStartColor,
@@ -341,7 +361,6 @@ export default {
   position: absolute;
   top: 0;
   width: 0;
-  /* width: 250px; */
   height: 100%;
   background-color: #f6f6f7;
   left: 100%;
@@ -353,6 +372,7 @@ export default {
 #startColor:active .infoRectangle,
 .mainButtons:hover .infoRectangle {
   width: 250px;
+  overflow: auto;
 }
 .infoRectangle > * {
   min-width: 250px;
@@ -435,6 +455,18 @@ export default {
   padding-right: 10%;
   font-size: 17px;
   width: 80%;
+
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  transition: border-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+}
+
+#classifyMethod:focus,
+#classifyNumber:focus {
+  outline: none;
+  border-color: #66afe9;
+  box-shadow: 0 0 4px #66afe999;
 }
 
 #ribbon {
@@ -472,27 +504,50 @@ export default {
 }
 
 .starContent {
-  display: flex;
-  justify-content: space-between;
+  margin-top: 10px;
   padding-left: 40px;
-  font-weight: 400;
+  padding-right: 40px;
+  padding-top: 20px;
+  padding-bottom: 20px;
+  font-weight: 500;
   font-size: 15px;
-  line-height: 30px;
-  cursor: pointer;
+  height: 30px;
+  display: flex;
+  align-items: center; /* 垂直居中 */
+  justify-content: space-between; /* item.name 居左，CloseSquareOutlined 居右 */
 }
 .starContent:hover {
   background-color: #dbdff4;
 }
-.delete-button {
-  background-color: white;
-  border: 1px solid #e0e0e0;
+
+.starredLable {
+  padding: 5px 10px 5px 10px;
+  background-color: #e6eefd;
   border-radius: 5px;
-  cursor: pointer;
-  font-size: 15px;
-  line-height: 30px;
-  margin-right: 5px;
+  width: fit-content;
+  color: #3579f6;
 }
-.delete-button:hover {
-  color: #3478f5;
+
+.starContent .deleteStarred {
+  font-size: 20px;
+}
+
+#note {
+  background-color: transparent;
+  padding: 0;
+}
+
+#noteContent {
+  margin: 10px;
+  margin-left: 30px;
+  padding: 10px;
+  padding-top: 15px;
+  font-size: 15px;
+  width: 200px;
+  /* height: 200px; */
+  box-shadow: 1px 3px 7px lightblue;
+  background-color: #f1f1f1;
+  color: #555555;
+  border-radius: 5px;
 }
 </style>

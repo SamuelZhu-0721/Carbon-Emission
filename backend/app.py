@@ -12,7 +12,7 @@ import numpy as np
 import os
 
 app = Flask(__name__)
-CORS(app)  # 配置CORS以允许所有源
+cors = CORS(app, resources={r"/api/*": {"origins": "*"}}) # 配置CORS以允许所有源
 
 # 设置日志记录
 logging.basicConfig(level=logging.DEBUG)

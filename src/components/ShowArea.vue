@@ -55,8 +55,6 @@
       </div>
       <div id="columnDragger" @mousedown="startResize"></div>
       <div id="chartArea" ref="chartArea">
-        <div id="compareIcon" class="iconButtons"></div>
-        <div id="compare" class="iconButtons">对比</div>
         <div id="pitGraphArea">
           <span class="graphHeading">碳排放类型占比</span>
           <div class="graphArea">
@@ -74,9 +72,6 @@
           <div class="graphArea">
             <ForecastChart :currCountry="currCountry"></ForecastChart>
           </div>
-        </div>
-        <div id="predict" style="margin-bottom: 100px">
-          <span class="graphHeading">碳达峰年份预测：</span>
         </div>
       </div>
     </div>
@@ -294,6 +289,14 @@ import ForecastChart from "./ForecastChart.vue";
 </script>
 
 <style>
+#container {
+  height: 100%;
+  width: 100%;
+  display: grid;
+  grid-template-columns: 60px 1fr;
+  align-items: flex-start;
+}
+
 /* 第一列：菜单栏 */
 #fakeMenuArea {
   position: relative;
@@ -318,6 +321,7 @@ import ForecastChart from "./ForecastChart.vue";
   background-color: #f6f6f7;
 }
 #chartArea {
+  min-height: 100vh;
   position: relative;
   flex: 1;
   background-color: #ffffff;
@@ -325,14 +329,9 @@ import ForecastChart from "./ForecastChart.vue";
   max-height: 100vh;
 }
 
-/* 地图区 */
-#cesiumContainer {
-  position: relative;
-  height: 96%;
-  left: 0px;
-}
 /* 工具区 */
 #toolsArea {
+  z-index: 300;
   position: absolute;
   top: 2%;
   right: 40px;
@@ -422,12 +421,13 @@ import ForecastChart from "./ForecastChart.vue";
   border-radius: 5px;
 }
 .graphHeading {
+  margin-top: 50px;
   margin-left: 5%;
   padding: 1px 5px 1px 5px;
   height: 20px;
   font-size: 19px;
   font-weight: 500;
-  border-radius: 2px;
+  border-radius: 5px;
 }
 #pitGraphArea .graphHeading {
   background-color: #fbe6e7;
@@ -441,9 +441,11 @@ import ForecastChart from "./ForecastChart.vue";
   background-color: #dce4dd;
   color: #4e9a4b;
 }
-#predict .graphHeading {
-  background-color: #f6f6f7;
-  color: #6e757c;
+
+#pitGraphArea,
+#lineGraphArea,
+#lineGraphArea2 {
+  margin-top: 20px;
 }
 
 .graphArea {
@@ -453,5 +455,6 @@ import ForecastChart from "./ForecastChart.vue";
   width: 90%;
   aspect-ratio: 16/9;
   background-color: #f6f6f6;
+  border-radius: 15px;
 }
 </style>

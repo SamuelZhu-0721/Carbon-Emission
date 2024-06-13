@@ -108,7 +108,7 @@ export default {
           break;
         }
       }
-      const tempPer = this.jsonSource.features;
+      const tempPer = this.jsonSourcePer.features;
       let thisCountryPropertiesPer = null;
       for (let i = 0; i < tempPer.length; i++) {
         if (tempPer[i].properties.NAME === this.myCurrCountry) {
@@ -116,14 +116,14 @@ export default {
           break;
         }
       }
-      if (!thisCountryProperties) {
+      if (!thisCountryProperties || !thisCountryPropertiesPer) {
         alert("该国数据缺失！");
       } else {
         this.totalData = [];
         const newData = {
           key: 1,
           year: 1970,
-          total: Number(thisCountryPropertiesPer[`F1970`]).toFixed(2),
+          total: (Number(thisCountryProperties[`F1970`]) / 10000).toFixed(2) + "万",
           avg: Number(thisCountryPropertiesPer[`F1970`]).toFixed(2),
           increasing: "/",
         };
@@ -131,13 +131,16 @@ export default {
         for (let i = 1971; i <= 2020; i++) {
           const thisYear = Number(thisCountryProperties[`F${i}`]);
           const lastYear = Number(thisCountryProperties[`F${i - 1}`]);
+          const increasing =
+            lastYear === 0
+              ? "/"
+              : (((thisYear - lastYear) / lastYear) * 100).toFixed(2) + "%";
           const newData = {
             key: i - 1969,
             year: i,
-            total: thisYear.toFixed(2),
+            total: (thisYear / 10000).toFixed(2) + "万",
             avg: Number(thisCountryPropertiesPer[`F${i}`]).toFixed(2),
-            increasing:
-              (((thisYear - lastYear) / lastYear) * 100).toFixed(2) + "%",
+            increasing: increasing,
           };
           this.totalData.push(newData);
         }
@@ -165,8 +168,15 @@ export default {
   box-shadow: 1px 2px 5px #0000001a;
 }
 #infoBox h2 {
+  display: inline-block;
+  margin: 0 auto;
+  margin-bottom: 10px;
   margin-top: 0;
-  color: #333;
+  color: #ea3543;
+
+  padding: 2px 10px 2px 10px;
+  border-radius: 5px;
+  background-color: #fbe6e7;
 }
 #closeInfoBox {
   font-size: 20px;
@@ -174,16 +184,4 @@ export default {
   top: 15px;
   right: 15px;
 }
-#infoBox p {
-  color: #666;
-}
-/* :deep() .ant-table-thead > tr > th {
-  background-color: #c7dcfb;
-} */
-/* #showTable {
-  height: 100%;
-} */
-
-/* .ant-table-wrapper {
-} */
 </style>

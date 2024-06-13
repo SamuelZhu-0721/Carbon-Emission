@@ -38,6 +38,7 @@ const year = ref(1970);
 const currCountry = ref("null");
 const isLegendShow = ref(false);
 const isInfoBoxShow = ref(false);
+const currIntervals = ref([]);
 
 const legendItems = ref([]); // 用于存储图例项
 
@@ -327,6 +328,7 @@ function hexToRgb(hex) {
     : null;
 }
 function setClassifyColor(intervals, colors) {
+  currIntervals.value = intervals;
   const startColorValue = hexToRgb(startColor.value);
   const endColorValue = hexToRgb(endColor.value);
   for (let i = 0; i < classifyN.value; i++) {
@@ -381,8 +383,7 @@ const changeStyle = () => {
   legendItems.value = generateLegendItems(
     startColor.value,
     endColor.value,
-    minValueArray.value[year.value - 1970],
-    maxValueArray.value[year.value - 1970],
+    currIntervals.value,
     classifyN.value
   );
 };
@@ -502,17 +503,10 @@ const changeStyleNature = () => {
 };
 
 // 生成图例项
-const generateLegendItems = (
-  startColor,
-  endColor,
-  minValue,
-  maxValue,
-  steps
-) => {
+const generateLegendItems = (startColor, endColor, intervals, steps) => {
   const items = [];
   const startColorValue = hexToRgb(startColor);
   const endColorValue = hexToRgb(endColor);
-  const step = (maxValue - minValue) / steps;
   for (let i = 0; i < steps; i++) {
     const ratio = i / (steps - 1);
     const r =
@@ -521,13 +515,19 @@ const generateLegendItems = (
       startColorValue[1] + (endColorValue[1] - startColorValue[1]) * ratio;
     const b =
       startColorValue[2] + (endColorValue[2] - startColorValue[2]) * ratio;
-    items.push({
-      color: `rgb(${Math.round(r)}, ${Math.round(g)}, ${Math.round(b)},0.6)`,
-      label: `${(minValue + (step * i) / 100000000).toFixed(1)}亿 - ${(
-        minValue +
-        (step * (i + 1)) / 100000000
-      ).toFixed(1)}亿`,
-    });
+    if (intervals[steps] > 1000000) {
+      items.push({
+        color: `rgb(${Math.round(r)}, ${Math.round(g)}, ${Math.round(b)},0.6)`,
+        label: `${(intervals[i] / 100000000).toFixed(1)}亿 - ${(
+          intervals[i + 1] / 100000000
+        ).toFixed(1)}亿`,
+      });
+    } else {
+      items.push({
+        color: `rgb(${Math.round(r)}, ${Math.round(g)}, ${Math.round(b)},0.6)`,
+        label: `${intervals[i].toFixed(1)} - ${intervals[i + 1].toFixed(1)}`,
+      });
+    }
   }
   return items;
 };
@@ -563,12 +563,11 @@ defineExpose({
 </script>
 
 <style>
-#container {
-  height: 100%;
-  width: 100%;
-  display: grid;
-  grid-template-columns: 60px 1fr;
-  align-items: flex-start;
+/* 地图区 */
+#cesiumContainer {
+  position: relative;
+  height: 96%;
+  left: 0px;
 }
 #showLegend {
   position: absolute;
