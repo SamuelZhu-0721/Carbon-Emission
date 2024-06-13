@@ -12,13 +12,6 @@
       :currCountry
       @change-isInfoBoxShow="handleChangeIsInfoBoxShow"
     ></InfoBox>
-    <!-- <div
-      v-show="!isLegendShow && addedData !== null"
-      id="showLegend"
-      @click="showLegend"
-    >
-      显示图例
-    </div> -->
     <UpCircleOutlined
       v-show="!isLegendShow && addedData !== null"
       id="showLegend"
@@ -92,7 +85,7 @@ watch(
   (newValue) => {
     if (newValue) {
       addedData.value = newValue;
-      console.log(addedData.value);
+      // console.log(addedData.value);
       isLegendShow.value = true;
       addData();
     }
@@ -101,7 +94,7 @@ watch(
 watch(
   () => props.styleMethod,
   (newValue) => {
-    console.log("cesium-styleMethod:", newValue);
+    // console.log("cesium-styleMethod:", newValue);
     styleMethod.value = newValue;
     if (currDataSource.value === null) {
       alert("请选择数据！");
@@ -113,7 +106,7 @@ watch(
 watch(
   () => props.classifyN,
   (newValue) => {
-    console.log("cesium-classifyN:", newValue);
+    // console.log("cesium-classifyN:", newValue);
     classifyN.value = newValue;
     if (currDataSource.value === null) {
       alert("请选择数据！");
@@ -125,7 +118,7 @@ watch(
 watch(
   () => props.startColor,
   (newValue) => {
-    console.log("newStart:" + newValue);
+    // console.log("newStart:" + newValue);
     startColor.value = newValue;
     if (currDataSource.value === null) {
       alert("请选择数据！");
@@ -137,7 +130,7 @@ watch(
 watch(
   () => props.endColor,
   (newValue) => {
-    console.log("endStart:" + newValue);
+    // console.log("endStart:" + newValue);
     endColor.value = newValue;
     if (currDataSource.value === null) {
       alert("请选择数据！");
@@ -160,7 +153,7 @@ watch(
 watch(
   () => props._3dType,
   (newValue) => {
-    console.log(newValue);
+    // console.log(newValue);
     switch (newValue) {
       case 3:
         myViewer.value.scene.morphTo3D(1.5);
@@ -188,11 +181,10 @@ onMounted(() => {
     homeButton: false,
     sceneModePicker: false,
     infoBox: false, // 禁用信息窗口
-    // selectionIndicator: false, // 禁用选择指示器
   });
   viewer._cesiumWidget._creditContainer.style.display = "none";
   viewer.scene.skyBox.show = false;
-  viewer.scene.backgroundColor = Cesium.Color.fromCssColorString("#ffffff");
+  viewer.scene.backgroundColor = Cesium.Color.fromCssColorString("#fcfcfc");
   viewer.scene.sun.show = false;
   viewer.scene.moon.show = false;
 
@@ -226,18 +218,31 @@ onMounted(() => {
       currCountry.value = pick.id._properties._NAME._value;
     }
   }, Cesium.ScreenSpaceEventType.LEFT_CLICK);
+
+  viewer.camera.flyTo({
+    destination: {
+      x: -3763615.263278671,
+      y: 14328046.39785114,
+      z: 11968303.428517662,
+    },
+    orientation: {
+      heading: 6.283185307179586,
+      pitch: -1.5690960444421616,
+      roll: 0,
+    },
+    duration: 1,
+  });
 });
 
 const addData = () => {
   const dataUrl = "./data/" + addedData.value + ".geojson";
-  console.log(dataUrl);
+  // console.log(dataUrl);
   const viewer = myViewer.value;
   viewer.dataSources.removeAll();
   Cesium.GeoJsonDataSource.load(dataUrl)
     .then((dataSource) => {
       currDataSource.value = dataSource;
       viewer.dataSources.add(dataSource);
-
       dataSource.clustering.enabled = true;
       dataSource.clustering.point = true;
       dataSource.clustering.pixelRange = 5; //聚合距离，小于这个距离会被融合
@@ -261,7 +266,6 @@ const addData = () => {
         }
         entities[i].billboard = undefined;
         const area = entities[i].properties.SHAPE_AREA.getValue();
-        //console.log(10+Math.log(area));
         entities[i].point = new Cesium.PointGraphics({
           pixelSize: 10 + Math.log(area) * 10,
           color: new Cesium.Color(1, 0, 0, 0.6),
@@ -298,6 +302,7 @@ function hexToRgb(hex) {
     : null;
 }
 function setClassifyColor(intervals, colors) {
+  console.log(intervals);
   const startColorValue = hexToRgb(startColor.value);
   const endColorValue = hexToRgb(endColor.value);
   for (let i = 0; i < classifyN.value; i++) {
@@ -508,7 +513,6 @@ const handleChangeIsInfoBoxShow = () => {
 };
 const handChangeIsLegendShow = () => {
   isLegendShow.value = !isLegendShow.value;
-  console.log("handle");
 };
 const showLegend = () => {
   isLegendShow.value = !isLegendShow.value;

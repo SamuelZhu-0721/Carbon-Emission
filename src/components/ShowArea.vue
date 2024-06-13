@@ -168,6 +168,24 @@ export default {
         case "AFOLU":
           this.currDataCHN = "其他碳排";
           break;
+        case "total_per":
+          this.currDataCHN = "人均总碳排";
+          break;
+        case "buildings_per":
+          this.currDataCHN = "人均建筑碳排";
+          break;
+        case "energy_per":
+          this.currDataCHN = "人均能源碳排";
+          break;
+        case "transport_per":
+          this.currDataCHN = "人均交通碳排";
+          break;
+        case "industry_per":
+          this.currDataCHN = "人均工业碳排";
+          break;
+        case "AFOLU_per":
+          this.currDataCHN = "人均其他碳排";
+          break;
         default:
           console.log("unknown type");
           break;

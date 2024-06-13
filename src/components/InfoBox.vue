@@ -1,5 +1,5 @@
 <template>
-  <div id="infoBox">
+  <div id="infoBox" v-drag>
     <CloseOutlined id="closeInfoBox" @click="closeInfoBox"></CloseOutlined>
     <h2>{{ this.myCurrCountry }}</h2>
     <a-table
@@ -15,11 +15,28 @@
 import { CloseOutlined } from "@ant-design/icons-vue";
 
 export default {
+  directives: {
+    drag(el) {
+      el.onmousedown = function (e) {
+        const disx = e.pageX - el.offsetLeft;
+        const disy = e.pageY - el.offsetTop;
+        document.onmousemove = function (e) {
+          el.style.left = e.pageX - disx + "px";
+          el.style.top = e.pageY - disy + "px";
+        };
+        document.onmouseup = function () {
+          document.onmousemove = document.onmouseup = null;
+        };
+      };
+    },
+  },
   components: {
     CloseOutlined,
   },
   data() {
     return {
+      left: 70,
+      top: 30,
       totalData: [],
       myCurrCountry: "CHINA",
       columns: [
@@ -38,8 +55,14 @@ export default {
           dataIndex: "avg",
           key: "avg",
         },
+        {
+          title: "总和增长率",
+          dataIndex: "increasing",
+          key: "increasing",
+        },
       ],
       jsonSource: null,
+      jsonSourcePer: null,
     };
   },
   props: {
@@ -67,6 +90,14 @@ export default {
         .catch((error) =>
           console.error("Error loading the geojson data: ", error)
         );
+      fetch("/data/total_per.geojson")
+        .then((response) => response.json())
+        .then((data) => {
+          this.jsonSourcePer = data;
+        })
+        .catch((error) =>
+          console.error("Error loading the geojson data: ", error)
+        );
     },
     loadList() {
       const temp = this.jsonSource.features;
@@ -77,17 +108,36 @@ export default {
           break;
         }
       }
+      const tempPer = this.jsonSource.features;
+      let thisCountryPropertiesPer = null;
+      for (let i = 0; i < tempPer.length; i++) {
+        if (tempPer[i].properties.NAME === this.myCurrCountry) {
+          thisCountryPropertiesPer = tempPer[i].properties;
+          break;
+        }
+      }
       if (!thisCountryProperties) {
         alert("该国数据缺失！");
       } else {
-        // console.log(thisCountryProperties);
         this.totalData = [];
-        for (let i = 1970; i <= 2020; i++) {
+        const newData = {
+          key: 1,
+          year: 1970,
+          total: Number(thisCountryPropertiesPer[`F1970`]).toFixed(2),
+          avg: Number(thisCountryPropertiesPer[`F1970`]).toFixed(2),
+          increasing: "/",
+        };
+        this.totalData.push(newData);
+        for (let i = 1971; i <= 2020; i++) {
+          const thisYear = Number(thisCountryProperties[`F${i}`]);
+          const lastYear = Number(thisCountryProperties[`F${i - 1}`]);
           const newData = {
             key: i - 1969,
             year: i,
-            total: Number(thisCountryProperties[`F${i}`]).toFixed(2),
-            avg: Number(thisCountryProperties[`F${i}`]).toFixed(2),
+            total: thisYear.toFixed(2),
+            avg: Number(thisCountryPropertiesPer[`F${i}`]).toFixed(2),
+            increasing:
+              (((thisYear - lastYear) / lastYear) * 100).toFixed(2) + "%",
           };
           this.totalData.push(newData);
         }
@@ -103,17 +153,16 @@ export default {
 <style>
 #infoBox {
   position: absolute;
-  right: 10px;
-  z-index: 100;
-  top: 10%;
+  left: v-bind(left + "px");
+  top: v-bind(top + "px");
+  z-index: 2000;
   width: 500px;
-  /* max-height: 80%; */
   text-align: center;
   font-family: Arial, sans-serif;
-  background-color: #ffffffa4;
+  background-color: #ffffff88;
   padding: 20px;
   border-radius: 5px;
-  box-shadow: 0 2px 5px #0000001a;
+  box-shadow: 1px 2px 5px #0000001a;
 }
 #infoBox h2 {
   margin-top: 0;
