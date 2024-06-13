@@ -154,11 +154,18 @@ def predict():
     df, diffed = process_data(df)
     forecast = predict_country_data(df, diffed)
 
-    # 更新 GeoJSON 文件（如果需要）
-    # 这部分代码需要根据实际需要进行调整
+    # 将历史数据和预测数据合并
+    last_year = df['year'].iloc[-1]
+    future_years = range(last_year + 1, last_year + 1 + len(forecast))
+    forecast_df = pd.DataFrame({'year': future_years, 'value': forecast})
 
-    # 返回预测结果
-    return jsonify(list(forecast))
+    # 结合历史数据和预测数据
+    combined_df = pd.concat([df[['year', 'value']], forecast_df])
+    combined_df = combined_df.reset_index(drop=True)
+
+    # 返回数据
+    result = combined_df.to_dict(orient='records')  # 将DataFrame转换为字典列表
+    return jsonify(result)
 
 
 if __name__ == '__main__':
