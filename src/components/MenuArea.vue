@@ -7,10 +7,12 @@
           <div id="dataHelp" :class="['iconButtons']" @click="toggleNote"></div>
           <div id="note" v-show="showNote">
             <div id="noteContent">
-              <p>数据选择说明</p>
-              <p>1. 点击数据按钮，选择数据类型</p>
-              <p>2. 点击数据类型，显示对应数据</p>
-              <p>3. 点击数据类型，可切换数据显示</p>
+              <p style="font-weight: bold">数据说明</p>
+              <p>· GWP(Global Warming Potential)：温室气体等效二氧化碳质量</p>
+              <p>· GWP可用于衡量温室气体对全球变暖的影响/p></p>
+              <p>· 本项目中所涉数据若无特殊申明单位均为(GWP)吨</p>
+              <p>· 碳排放数据源：World Bank</p>
+              <p>· 清洁能源数据源：Global Energy Monitor</p>
             </div>
           </div>
           <!-- <div id="helpContent">帮助提示内容</div> -->
@@ -98,11 +100,6 @@
           >
             其他土地利用排放
           </div>
-          <!-- <div id="cleanEnergy" :class="dataType1">清洁能源</div>
-          <div id="wind" :class="dataType2">风能</div>
-          <div id="solar" :class="dataType2">太阳能</div>
-          <div id="nuclear" :class="dataType2">核能</div>
-          <div id="hydro" :class="dataType2">水电</div> -->
         </div>
       </div>
     </div>
@@ -368,7 +365,6 @@ export default {
   top: 0;
   width: 0;
 
-  overflow-y: scroll;
   padding-bottom: 20px;
   height: 100%;
   background-color: #f6f6f7;
@@ -381,7 +377,7 @@ export default {
 #startColor:active .infoRectangle,
 .mainButtons:hover .infoRectangle {
   width: 250px;
-  overflow: auto;
+  overflow-y: auto;
 }
 .infoRectangle > * {
   min-width: 250px;
