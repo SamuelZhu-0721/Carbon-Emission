@@ -72,7 +72,7 @@
           </div>
         </div>
         <div id="lineGraphArea2">
-          <span class="graphHeading">清洁能源时序变化：(可选)</span>
+          <span class="graphHeading">清洁能源时序变化</span>
           <div class="graphArea">
             <ForecastChart :currCountry="currCountry"></ForecastChart>
           </div>
